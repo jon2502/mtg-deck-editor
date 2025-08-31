@@ -4,11 +4,12 @@ interface SearchParams {
   format?: string; // e.g. 'standard', 'modern'
   color?: string;
   page?: number;
+  totalpages?: number;
   // Extend with filters like color, set, etc. if needed
 }
 
 export const searchCards = async (params: SearchParams) => {
-    const { name, format, color, page} = params;
+    const { name, format, color, page, totalpages} = params;
 
     const searchIndex = [
         {value: name ? `name:${name}` : '' },
@@ -23,7 +24,9 @@ export const searchCards = async (params: SearchParams) => {
     
     //insert filterd content into url and use encodeURIComponent to encode character of the url
     var url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(queryString)}${page ? `&page=${page}` : ''}`;
-    
+
+    console.log(url)
+
     const res = await fetch(url);
 
     if (!res.ok) {
