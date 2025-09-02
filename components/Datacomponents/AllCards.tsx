@@ -1,5 +1,5 @@
 "use client";
-
+import React from 'react'
 import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 
@@ -7,25 +7,45 @@ const AllCards = () => {
   const [name, setName] = useState('')
   const [format, setFormat] = useState('commander')
   const [color, setColor] = useState('')
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const [totalpages, setTotalpages] = useState(0)
   const [btnamount, setBtnamount] = useState(0)
+  const [btnarray, setBtnarray] = useState<number[]>([])
   const [cards, setCards] = useState([])
+
+  function generateBtns(){
+    var half = Math.round(btnamount / 2)
+    if(page + half >= totalpages){
+      var end = totalpages
+    } else if (page > half) {
+      var end = page + half
+    } else {
+      var end = btnamount
+    }
+    var from = end - btnamount
+    var values = []
+    for (var i = from; i < end; i++) {
+      values.push(i);
+    }
+    setBtnarray(values) 
+  }
 
   async function fetchCards() {
     setPage(1)
     const res = await searchCards({ name, format, color, page })
     setCards(res.data)
-    setTotalpages(Math.ceil(res.data.total_cards/ 175))
-    if(totalpages < 10){
-      setBtnamount(totalpages)
+    var val = Math.ceil(res.total_cards/ 175)
+    setTotalpages(val)
+    if(val < 10){
+      setBtnamount(val)
     }else{
       setBtnamount(10)
     }
   }
-  async function fetchNextPage() {
-      const res = await searchCards({ name, format, color, page })
-      setCards(res.data)
+
+  async function fetchNewPage() {
+    const res = await searchCards({ name, format, color, page })
+    setCards(res.data)
   }
 
   useEffect(()=>{
@@ -33,12 +53,29 @@ const AllCards = () => {
   },[name, format, color])
 
   useEffect(()=>{
-    fetchNextPage()
+    generateBtns()
+  },[page, btnamount])
+
+ useEffect(()=>{
+    fetchNewPage()
   },[page])
 
 
   return(
   <section className=''>
+    <div>
+      <button onClick={() => setPage(1)}>{"<<"}</button>
+      <button onClick={() => setPage(page - 1)}>{"<"}</button>
+      {btnarray.map((num)=>(
+        <button key={num}
+        className={num+1 === page ? 'active NavBtn' : 'NavBtn'}
+        id={(num + 1).toString()}
+        onClick={() => setPage(num + 1)}>
+          {num+1}</button>
+      ))}
+      <button onClick={() => setPage(page + 1)}>{">"}</button>
+      <button onClick={() => setPage(totalpages)}>{">>"}</button>
+    </div>
     {cards.map((card:{name:string, mana_cost:string, type_line:string})=>(
       <div key={card.name} className='flex'>
         <p>{card.name}</p>
