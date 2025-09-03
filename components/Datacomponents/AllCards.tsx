@@ -4,14 +4,23 @@ import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 
 const AllCards = () => {
+  //search parameters
   const [name, setName] = useState('')
   const [format, setFormat] = useState('commander')
   const [color, setColor] = useState('')
+
+  //pages and button info
   const [page, setPage] = useState(0)
   const [totalpages, setTotalpages] = useState(0)
   const [btnamount, setBtnamount] = useState(0)
   const [btnarray, setBtnarray] = useState<number[]>([])
+  //list of cards
   const [cards, setCards] = useState([])
+
+  const [position, setPosition] = useState({
+    x: 0,
+    y: 0
+  })
 
   function generateBtns(){
     var half = Math.round(btnamount / 2)
@@ -78,7 +87,7 @@ const AllCards = () => {
     </div>
     {cards.map((card:{name:string, mana_cost:string, type_line:string})=>(
       <div key={card.name} className='flex'>
-        <p>{card.name}</p>
+        <p onPointerMove={e => console.log(`mouse over ${card.name}`)}>{card.name}</p>
         <p>{card.mana_cost}</p>
         <p>{card.type_line}</p>
       </div>
