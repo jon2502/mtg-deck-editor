@@ -85,13 +85,35 @@ const AllCards = () => {
       <button onClick={() => setPage(page + 1)}>{">"}</button>
       <button onClick={() => setPage(totalpages)}>{">>"}</button>
     </div>
-    {cards.map((card:{name:string, mana_cost:string, type_line:string})=>(
-      <div key={card.name} className='flex'>
-        <p onPointerMove={e => console.log(`mouse over ${card.name}`)}>{card.name}</p>
-        <p>{card.mana_cost}</p>
-        <p>{card.type_line}</p>
-      </div>
-    ))}
+    <table>
+        <tbody>
+          {cards.map((card:{name:string, mana_cost:string, type_line:string})=>(
+          <tr key={card.name} className='flex'>
+            <td>
+              <div>
+                <div>
+                  <i>
+                  </i>
+                </div>
+                <div>
+                  <p onPointerMove={e => console.log(`mouse over ${card.name}`)}>{card.name}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>{card.mana_cost}</p>
+              </div>
+            </td>
+            <td>
+              <div>
+                <p>{card.type_line}</p>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   </section>
   )
 }

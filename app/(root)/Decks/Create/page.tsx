@@ -10,7 +10,6 @@ const page = () => {
   async function formAction(formData: FormData){
     const name = formData.get("name") as string
     const format = formData.get("format") as string
-    console.log(name, format)
     fetch("http://localhost:3500/CreateDeck",{
           method: 'POST',
           headers: {

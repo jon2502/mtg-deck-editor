@@ -8,7 +8,7 @@ interface SearchParams {
 }
 
 export const searchCards = async (params: SearchParams) => {
-    const { name, format, color, page, totalpages} = params;
+    const { name, format, color, page} = params;
 
 
 

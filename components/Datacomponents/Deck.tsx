@@ -1,6 +1,12 @@
+"use client";
 import React from 'react'
 import { useState, useEffect } from 'react'
-const Deck = () => {
+
+interface DeckProps {
+  id: string;
+}
+
+const Deck = ({id}:DeckProps) => {
     const [deck, setDeck] = useState([])
 
     async function save() {
@@ -8,8 +14,12 @@ const Deck = () => {
     }
 
     async function importDeck() {
-        //setDeck()
+        console.log('test')
+        const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
+        const deck = await response.json()
+        setDeck(deck)
     }
+    importDeck()
 
     async function editDeck() {
         //setDeck()

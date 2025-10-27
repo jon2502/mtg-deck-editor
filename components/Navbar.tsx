@@ -9,7 +9,7 @@ function Navbar() {
             <Link href="/Decks">
                 <span>Decks</span>
             </Link>
-            <Link href="/Create">
+            <Link href="/Decks/Create">
                 <span>Create Deck</span>
             </Link>
           </div>

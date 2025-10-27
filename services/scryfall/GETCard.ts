@@ -9,8 +9,6 @@ export const searchCards = async (params: CardParams) => {
 
     var url = `https://api.scryfall.com/cards/${set}/${collector_number}`;
 
-    console.log(url)
-
     const res = await fetch(url);
 
     if (!res.ok) {
