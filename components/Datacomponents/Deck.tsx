@@ -19,7 +19,6 @@ const Deck = ({id}:DeckProps) => {
         const deck = await response.json()
         setDeck(deck)
     }
-    importDeck()
 
     async function editDeck() {
         //setDeck()
@@ -29,22 +28,19 @@ const Deck = ({id}:DeckProps) => {
         editDeck()
     },[deck])
 
+    useEffect(() =>{
+        importDeck()
+    },[])
+        
+
 
     
     return (
         <section>
-            <h1>Deck</h1>
-            {deck.map((category:{categoryName:string, cards:[]})=>(
-                <div>
-                    <h1>{category.categoryName}</h1>
-                    <div>
-                        {category.cards.map((card:{count:number, set:string, collector_number:string})=>(
-                            <p>test</p>
-                        ))}
-                    </div>
-                </div>
-            ))}
-                
+            <h1>{deck[0]?.name}</h1>
+            {deck[0]?.deck[0]?.cards.map((card:{count:number, set:string, collector_number:string})=>(
+                <p key={card.collector_number}>test</p>
+            ))} 
             <button onClick={save}>save</button>
         </section>
     )
