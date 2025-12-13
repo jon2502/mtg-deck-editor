@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import Overlay from "@/components/Overlay";
+import Overlay_Context from "@/context/overlay_context"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Overlay_Context value={false}>
         <Navbar/>
         {children}
+        </Overlay_Context>
       </body>
     </html>
   );
