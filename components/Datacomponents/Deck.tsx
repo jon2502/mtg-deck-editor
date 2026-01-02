@@ -6,7 +6,7 @@ interface DeckProps {
   id: string;
 }
 
-interface Deck {
+interface Decktypes {
     name: string;
     deck: Array<{
         categoryName: string;
@@ -19,7 +19,7 @@ interface Deck {
 }
 
 const Deck = ({id}:DeckProps) => {
-    const [deck, setDeck] = useState<Deck[]>([])
+    const [deck, setDeck] = useState<Decktypes[]>([])
 
     async function save() {
         

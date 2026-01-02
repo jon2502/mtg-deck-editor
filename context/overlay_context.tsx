@@ -1,6 +1,16 @@
 'use client'
-import { createContext } from 'react'
+import { createContext, useContext, useState } from 'react'
  
-const Context = createContext(false)
+const OverlayContext = createContext(false);
 
-export default Context
+export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
+    const [setting, setSetting] = useState(false)
+
+    return (
+        <OverlayContext.Provider value={setting}>
+            {children}
+        </OverlayContext.Provider>
+    )
+}
+
+export const useOverlayContext = () => useContext(OverlayContext)
