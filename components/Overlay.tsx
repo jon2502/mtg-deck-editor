@@ -2,9 +2,9 @@
 import React from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
 function overlay() {
-  const Overlayopend = useOverlayContext()
-
-  if (!Overlayopend) return null
+  const {setting, value, toggleOverlay} = useOverlayContext()
+  console.log(setting)
+  if (!setting) return null
 
   return (
     <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
