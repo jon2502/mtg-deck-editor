@@ -2,8 +2,20 @@
 import React from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
 function overlay() {
-  const {setting, value, shutdown} = useOverlayContext()
+  const {setting, value, extra, shutdown} = useOverlayContext()
   console.log(setting)
+  console.log(extra)
+
+  async function DeleteFunction(id:string|number){
+    fetch(`http://localhost:3500/DeleteDeck/${id}`,{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+    })
+    shutdown()
+  }
+
   if (!setting) return null
   switch(value){
     case "save":
@@ -30,8 +42,8 @@ function overlay() {
       return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
         <div>
           <h1>Are you sure that you want to delete this deck</h1>
-          <button>Yes</button>
-          <button>No</button>
+          <button onClick={()=>DeleteFunction(extra)}>Yes</button>
+          <button onClick={()=>shutdown()}>No</button>
         </div>
       </div>
       break;
