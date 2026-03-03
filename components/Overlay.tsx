@@ -2,9 +2,12 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
+import { useDeckContext } from "@/context/deck_context"
+
 function overlay() {
 
   const {setting, value, extra, shutdown} = useOverlayContext()
+  const {importDecks}= useDeckContext()
   const router = useRouter()
 
   async function formAction(formData: FormData){
@@ -28,13 +31,14 @@ function overlay() {
   }
 
   async function DeleteFunction(id:string|number){
-    fetch(`http://localhost:3500/DeleteDeck/${id}`,{
+    await fetch(`http://localhost:3500/DeleteDeck/${id}`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           }
     })
     shutdown()
+    importDecks()
   }
 
   if (!setting) return null

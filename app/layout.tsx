@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Overlay from "@/components/Overlay";
 import {Overlaysetting} from "@/context/overlay_context"
+import {Decksetting} from "@/context/deck_context"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Overlaysetting>
+        <Decksetting>
           <Overlay/>
           <Navbar/>
           {children}
+        </Decksetting>
         </Overlaysetting>
       </body>
     </html>
