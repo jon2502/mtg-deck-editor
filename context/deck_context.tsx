@@ -20,7 +20,7 @@ interface Deckinfo {
 interface DeckContextType {
     deckinfo: Deckinfo[];
     importDecks: () => void
-    importDeck: ({id}:{id: string}) => void
+    importDeck: (id:string) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -43,7 +43,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         setDeckinfo(decks)
     }
 
-    async function importDeck({id}:{id: string}) {
+    async function importDeck(id: string) {
         console.log('test')
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()

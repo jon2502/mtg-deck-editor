@@ -1,14 +1,21 @@
-"use client"
+'use client'
 import AllCards from '@/components/Datacomponents/AllCards'
-import Deck from '@/components/Datacomponents/Deck'
 import {useState, useEffect} from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
-import { useRouter } from 'next/navigation'
+import { useDeckContext } from "@/context/deck_context"
+import { useParams } from 'next/navigation'
 
-const page =  async ({params}: {params: Promise<{ id:string }>}) => {
+
+const page =  () => {
   const [saved, SetSaved]= useState(false)
   const {toggleOverlaySettings} = useOverlayContext()
-  const id = (await params).id
+  const {deckinfo, importDeck}= useDeckContext()
+  const params = useParams<{ id: string }>()
+
+
+  useEffect(() =>{
+    importDeck(params.id)
+  },[])
 
   function checkSavedStatus(saved:boolean) {
     if(!saved){
@@ -22,7 +29,7 @@ const page =  async ({params}: {params: Promise<{ id:string }>}) => {
         <AllCards/>
       </div>
       <div className='w-[615px] h-[545px] overflow-auto overflow-x-hidden'>
-        <Deck id={id}/>
+        <p>filler</p>
       </div>
     </section>
   )
