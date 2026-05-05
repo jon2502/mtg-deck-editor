@@ -11,7 +11,6 @@ export const searchCards = async (params: SearchParams) => {
     const { name, format, color, page} = params;
 
 
-
     const searchIndex = [
         {value: name ? `name:${name}` : '' },
         {value: format ? `f:${format}` : '' },

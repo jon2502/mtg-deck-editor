@@ -96,7 +96,7 @@ const AllCards = () => {
                   </i>
                 </div>
                 <div>
-                  <p onPointerMove={e => console.log(`mouse over ${card.name}`)}>{card.name}</p>
+                  <p /*onPointerMove={e => console.log(`mouse over ${card.name}`)}*/>{card.name}</p>
                 </div>
               </div>
             </td>

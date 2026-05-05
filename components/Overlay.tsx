@@ -7,7 +7,7 @@ import { useDeckContext } from "@/context/deck_context"
 function overlay() {
 
   const {setting, value, extra, shutdown} = useOverlayContext()
-  const {importDecks}= useDeckContext()
+  const {importDecks, addCategory} = useDeckContext()
   const router = useRouter()
 
   async function formAction(formData: FormData){
@@ -27,6 +27,12 @@ function overlay() {
     .then(data => {
       router.push(`/Decks/Edit/${data._id}`)
     })
+    shutdown()
+  }
+
+  async function Add(formData: FormData) {
+    const categoryName = formData.get("categoryname") as string
+    addCategory(categoryName)
     shutdown()
   }
 
@@ -53,7 +59,6 @@ function overlay() {
         </div>
       </div>
       </div>
-      break;
     case "create":
       return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
         <div>
@@ -75,7 +80,15 @@ function overlay() {
           </form>
         </div>
       </div>
-      break;
+    case "Add-Category":
+      return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        <h2>Create new category</h2>
+        <form action={Add}>
+          <input type="text" name="categoryname" id="categoryname" />
+          <button type='submit'>Create</button>
+          <button onClick={()=>shutdown()}>Cancel</button>
+        </form>
+      </div>
     case "delete":
       return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
         <div>
@@ -84,7 +97,6 @@ function overlay() {
           <button onClick={()=>shutdown()}>No</button>
         </div>
       </div>
-      break;
     default:
       return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
         <p>something went wrog</p>

@@ -21,9 +21,10 @@ const OverlayContext = createContext<OverlayContextType>(
   defaultOverlayContext
 );
 
-const settingOptionsAllowed = ["save", "create", "delete"]
+const settingOptionsAllowed = ["save", "create","Add-Category", "delete"]
 
 export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
+    console.log("ran")
     const [setting, setSetting] = useState(false)
     const [value, setValue]= useState("")
     const [extra, SetExtra]=useState<string | number>("")

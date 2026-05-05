@@ -1,12 +1,14 @@
 "use client";
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useOverlayContext } from '@/context/overlay_context'
+import { useDeckContext } from "@/context/deck_context"
 
 interface DeckProps {
   id: string;
 }
 
-interface Decktypes {
+/*interface Decktypes {
     name: string;
     deck: Array<{
         categoryName: string;
@@ -16,41 +18,33 @@ interface Decktypes {
             collector_number:string
         }>
     }>;
-}
+}*/
 
 const Deck = ({id}:DeckProps) => {
-    const [deck, setDeck] = useState<Decktypes[]>([])
+    //const [deck, setDeck] = useState<Decktypes[]>([])
+    const {toggleOverlaySettings} = useOverlayContext()
+    const {deckinfo, importDeck} = useDeckContext()
 
     async function save() {
         
     }
 
-    async function importDeck() {
-        console.log('test')
-        const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
-        const deck = await response.json()
-        console.log(deck)
-        setDeck(deck)
-    }
-
-    async function editDeck() {
-        //setDeck()
-    }
-
-    useEffect(()=>{
-        editDeck()
-    },[deck])
-
     useEffect(() =>{
-        importDeck()
+        importDeck(id)
     },[])
         
-
-
-    
     return (
         <section>
-            <h1>{deck[0]?.name}</h1>
+            <div>
+                <h1>{deckinfo?.name}</h1>
+                <button onClick={()=>toggleOverlaySettings("Add-Category")}>Add Category</button>
+            </div>
+            <button onClick={save}>save</button>
+        </section>
+    )
+}
+
+/*
             {deck[0]?.deck.map((catagories)=>(
                 <div key={catagories.categoryName}>
                     <p>{catagories.categoryName}</p>
@@ -62,9 +56,5 @@ const Deck = ({id}:DeckProps) => {
                 </div>
                 
             ))} 
-            <button onClick={save}>save</button>
-        </section>
-    )
-}
-
+*/
 export default Deck

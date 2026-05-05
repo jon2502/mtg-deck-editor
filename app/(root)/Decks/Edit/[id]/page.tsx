@@ -4,6 +4,7 @@ import {useState, useEffect} from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 import { useParams } from 'next/navigation'
+import Deck from '@/components/Datacomponents/Deck'
 
 
 const page =  () => {
@@ -11,11 +12,6 @@ const page =  () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {deckinfo, importDeck}= useDeckContext()
   const params = useParams<{ id: string }>()
-
-
-  useEffect(() =>{
-    importDeck(params.id)
-  },[])
 
   function checkSavedStatus(saved:boolean) {
     if(!saved){
@@ -29,7 +25,7 @@ const page =  () => {
         <AllCards/>
       </div>
       <div className='w-[615px] h-[545px] overflow-auto overflow-x-hidden'>
-        <p>filler</p>
+        <Deck id={params.id}/>
       </div>
     </section>
   )

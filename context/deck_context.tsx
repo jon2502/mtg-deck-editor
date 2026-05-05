@@ -6,7 +6,7 @@ interface Deckinfo {
     format: string;
     color: string;
     _id: string;
-    deck?: Array<{
+    deck: Array<{
     categoryName: string;
     cards: Array<{
         count: number;
@@ -18,15 +18,27 @@ interface Deckinfo {
 
 
 interface DeckContextType {
-    deckinfo: Deckinfo[];
+    decklist: Deckinfo[];
+    deckinfo: Deckinfo;
     importDecks: () => void
     importDeck: (id:string) => void
+    addCategory:(categoryName: string) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
-    deckinfo: [],
+    decklist: [],
+    deckinfo: {
+        name: "",
+        format: "",
+        color: "",
+        _id: "",
+        deck: [
+            {categoryName:"", cards:[]}
+        ]
+    },
     importDecks:() => {},
-    importDeck:() => {}
+    importDeck:() => {},
+    addCategory:() =>{}
 }
 
 
@@ -34,26 +46,34 @@ const deafultDeckContextType: DeckContextType = {
 export const DeckContext = createContext<DeckContextType>(deafultDeckContextType);
 
 export const Decksetting = ({children}: {children: React.ReactNode}) => {
-    const [deckinfo, setDeckinfo] = useState([])
+    const [deckinfo, setDeckinfo] = useState<Deckinfo>(deafultDeckContextType.deckinfo)
+    const [decklist, setDecks] = useState([])
 
     async function importDecks() {
         const response = await fetch (`http://localhost:3500/GetDecks`)
         const decks = await response.json()
-        console.log(decks)
-        setDeckinfo(decks)
+        setDecks(decks)
     }
 
     async function importDeck(id: string) {
-        console.log('test')
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()
-        console.log(deck)
+        console.log(deck.deck)
         setDeckinfo(deck)
+    }
+
+    async function addCategory(newCategoryName: string) {
+        const newcategory = {
+            categoryName: newCategoryName,
+            cards: []
+        }
+        deckinfo.deck.push(newcategory)
+        console.log(deckinfo)
     }
 
 
     return (
-        <DeckContext.Provider value={{deckinfo, importDecks, importDeck}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory}}>
             {children}
         </DeckContext.Provider>
     )
