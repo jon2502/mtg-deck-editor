@@ -39,13 +39,8 @@ const Deck = ({id}:DeckProps) => {
                 <h1>{deckinfo?.name}</h1>
                 <button onClick={()=>toggleOverlaySettings("Add-Category")}>Add Category</button>
             </div>
-            <button onClick={save}>save</button>
-        </section>
-    )
-}
-
-/*
-            {deck[0]?.deck.map((catagories)=>(
+            <div>
+                {deckinfo.deck.map((catagories)=>(
                 <div key={catagories.categoryName}>
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
@@ -54,7 +49,10 @@ const Deck = ({id}:DeckProps) => {
                         </div>
                     ))}
                 </div>
-                
             ))} 
-*/
+            </div>
+            <button onClick={save}>save</button>
+        </section>
+    )
+}
 export default Deck

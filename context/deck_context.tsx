@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 interface Deckinfo {
     name: string;
@@ -49,6 +49,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     const [deckinfo, setDeckinfo] = useState<Deckinfo>(deafultDeckContextType.deckinfo)
     const [decklist, setDecks] = useState([])
 
+
     async function importDecks() {
         const response = await fetch (`http://localhost:3500/GetDecks`)
         const decks = await response.json()
@@ -58,7 +59,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     async function importDeck(id: string) {
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()
-        console.log(deck.deck)
+        //console.log(deck.deck)
         setDeckinfo(deck)
     }
 
@@ -67,7 +68,15 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             categoryName: newCategoryName,
             cards: []
         }
-        deckinfo.deck.push(newcategory)
+        setDeckinfo(
+            currentdeck => ({
+                // create a copy of the current deck info
+                ...currentdeck,
+                /*create a new deck array with all the old content in it pluss the new one,
+                this will then replace the old array and the content will re render*/
+                deck: [...currentdeck.deck, newcategory]
+            })
+        )
         console.log(deckinfo)
     }
 
