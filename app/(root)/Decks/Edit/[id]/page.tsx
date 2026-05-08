@@ -8,11 +8,8 @@ import Deck from '@/components/Datacomponents/Deck'
 
 
 const page =  () => {
-  const [saved, SetSaved]= useState(false)
   const {toggleOverlaySettings} = useOverlayContext()
-  const {deckinfo, importDeck}= useDeckContext()
   const params = useParams<{ id: string }>()
-
   function checkSavedStatus(saved:boolean) {
     if(!saved){
       toggleOverlaySettings("save")
@@ -21,7 +18,7 @@ const page =  () => {
 
   return (
     <section className='flex'>
-      <div className='w-[615px] h-[545px] overflow-auto overflow-x-hidden'>
+      <div className='w-[45%] h-[545px] pr-[12px] overflow-auto overflow-x-hidden'>
         <AllCards/>
       </div>
       <div className='w-[615px] h-[545px] overflow-auto overflow-x-hidden'>

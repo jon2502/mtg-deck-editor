@@ -2,6 +2,23 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
+import Image from 'next/image';
+
+type ImageUris = {
+  small: string;
+  normal: string;
+  large: string;
+}
+
+type SingleFaceCard = {
+  image_uris: ImageUris;
+  card_faces: never;
+}
+
+type  MultiFaceCard = {
+  image_uris: never;
+  card_faces: { image_uris?: ImageUris }[];
+};
 
 const AllCards = () => {
   //search parameters
@@ -68,8 +85,7 @@ const AllCards = () => {
  useEffect(()=>{
     fetchNewPage()
   },[page])
-
-
+  console.log(cards)
   return(
   <section className=''>
     <div>
@@ -85,35 +101,21 @@ const AllCards = () => {
       <button onClick={() => setPage(page + 1)}>{">"}</button>
       <button onClick={() => setPage(totalpages)}>{">>"}</button>
     </div>
-    <table>
-        <tbody>
-          {cards.map((card:{name:string, mana_cost:string, type_line:string})=>(
-          <tr key={card.name} className='flex'>
-            <td>
-              <div>
-                <div>
-                  <i>
-                  </i>
-                </div>
-                <div>
-                  <p /*onPointerMove={e => console.log(`mouse over ${card.name}`)}*/>{card.name}</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div>
-                <p>{card.mana_cost}</p>
-              </div>
-            </td>
-            <td>
-              <div>
-                <p>{card.type_line}</p>
-              </div>
-            </td>
+    <div>
+        <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
+          {cards.map((card:{oracleID:string, name:string, mana_cost:string, type_line:string,} & (SingleFaceCard | MultiFaceCard))=>(
+          <tr key={card.name}>
+            <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
+              <Image
+                src={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal}
+                alt="test"
+                fill
+              />
+            </div>
           </tr>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   </section>
   )
 }

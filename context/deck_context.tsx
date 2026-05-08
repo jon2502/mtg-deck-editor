@@ -48,6 +48,7 @@ export const DeckContext = createContext<DeckContextType>(deafultDeckContextType
 export const Decksetting = ({children}: {children: React.ReactNode}) => {
     const [deckinfo, setDeckinfo] = useState<Deckinfo>(deafultDeckContextType.deckinfo)
     const [decklist, setDecks] = useState([])
+    const [saved, SetSaved]= useState(false)
 
 
     async function importDecks() {
