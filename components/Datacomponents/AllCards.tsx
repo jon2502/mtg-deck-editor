@@ -3,6 +3,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 import Image from 'next/image';
+import { useOverlayContext } from '@/context/overlay_context';
 
 type ImageUris = {
   small: string;
@@ -12,15 +13,24 @@ type ImageUris = {
 
 type SingleFaceCard = {
   image_uris: ImageUris;
+  mana_cost: string
+  type_line: string
   card_faces: never;
 }
 
 type  MultiFaceCard = {
   image_uris: never;
-  card_faces: { image_uris?: ImageUris }[];
+  mana_cost: never
+  type_line: never
+  card_faces: { 
+    image_uris: ImageUris
+    mana_cost?: string
+    type_line: string
+  }[];
 };
 
 const AllCards = () => {
+  const {toggleOverlaySettings} = useOverlayContext()
   //search parameters
   const [name, setName] = useState('')
   const [format, setFormat] = useState('commander')
@@ -101,21 +111,38 @@ const AllCards = () => {
       <button onClick={() => setPage(page + 1)}>{">"}</button>
       <button onClick={() => setPage(totalpages)}>{">>"}</button>
     </div>
-    <div>
+    <section>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-          {cards.map((card:{oracleID:string, name:string, mana_cost:string, type_line:string,} & (SingleFaceCard | MultiFaceCard))=>(
-          <tr key={card.name}>
+          {cards.map((card:{oracleID:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
+          <div key={card.name}>
             <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
               <Image
                 src={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal}
                 alt="test"
                 fill
+                sizes='50vw'
               />
             </div>
-          </tr>
+            <div>
+              <p>{card.name}</p>
+              {card.card_faces ? (
+                <div>
+                  <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
+                  <p></p>
+                </div>
+              ):(
+                <div>
+                  <p>{card.type_line}</p>
+                  <p>{card.mana_cost}</p>
+                </div>
+                
+              )}
+              <button onClick={() => toggleOverlaySettings("Add-Card")}>+</button>
+            </div>
+          </div>
         ))}
       </div>
-    </div>
+    </section>
   </section>
   )
 }

@@ -21,7 +21,7 @@ const OverlayContext = createContext<OverlayContextType>(
   defaultOverlayContext
 );
 
-const settingOptionsAllowed = ["save", "create","Add-Category", "delete"]
+const settingOptionsAllowed = ["save", "create","Add-Category", "Add-Card", "delete"]
 
 export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     console.log("ran")

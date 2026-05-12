@@ -89,6 +89,15 @@ function overlay() {
           <button onClick={()=>shutdown()}>Cancel</button>
         </form>
       </div>
+    case "Add-Card":
+      return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        <h2>Add Card</h2>
+        <form action={Add}>
+          <input type="text" name="categoryname" id="categoryname" />
+          <button type='submit'>Create</button>
+          <button onClick={()=>shutdown()}>Cancel</button>
+        </form>
+      </div>
     case "delete":
       return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
         <div>

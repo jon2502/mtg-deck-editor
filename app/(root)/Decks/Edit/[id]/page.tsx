@@ -17,11 +17,11 @@ const page =  () => {
   }
 
   return (
-    <section className='flex'>
+    <section className='flex justify-center items-center gap-[2.5%]'>
       <div className='w-[45%] h-[545px] pr-[12px] overflow-auto overflow-x-hidden'>
         <AllCards/>
       </div>
-      <div className='w-[615px] h-[545px] overflow-auto overflow-x-hidden'>
+      <div className='w-[45%] h-[545px] overflow-auto overflow-x-hidden'>
         <Deck id={params.id}/>
       </div>
     </section>

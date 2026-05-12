@@ -8,18 +8,6 @@ interface DeckProps {
   id: string;
 }
 
-/*interface Decktypes {
-    name: string;
-    deck: Array<{
-        categoryName: string;
-        cards: Array<{
-            count: number;
-            set:string; 
-            collector_number:string
-        }>
-    }>;
-}*/
-
 const Deck = ({id}:DeckProps) => {
     //const [deck, setDeck] = useState<Decktypes[]>([])
     const {toggleOverlaySettings} = useOverlayContext()
