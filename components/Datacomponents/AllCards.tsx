@@ -128,12 +128,23 @@ const AllCards = () => {
               {card.card_faces ? (
                 <div>
                   <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
-                  <p></p>
+                  {card.card_faces[0].mana_cost || card.card_faces[1].mana_cost && (
+                  <p> {card.card_faces
+                    .map(face => face.mana_cost)
+                    .filter(cost => cost !== "")
+                    .join(" // ")}
+                  </p>
+                  )}
+                  <p> {card.card_faces
+                    .map(face => face.mana_cost)
+                    .filter(cost => cost !== "")
+                    .join(" // ")}
+                  </p>
                 </div>
               ):(
                 <div>
                   <p>{card.type_line}</p>
-                  <p>{card.mana_cost}</p>
+                  {card.mana_cost && (<p>{card.mana_cost}</p>)}
                 </div>
                 
               )}
