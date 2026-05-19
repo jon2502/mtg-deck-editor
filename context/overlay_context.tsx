@@ -4,8 +4,8 @@ import { createContext, useContext, useState } from 'react'
 interface OverlayContextType  {
     setting: boolean,
     value: string,
-    extra: string|number,
-    toggleOverlaySettings: (val:string, extra?:string|number) => void
+    extra: string,
+    toggleOverlaySettings: (val:string, extra?:string) => void
     shutdown: () => void
 }
 
@@ -27,9 +27,9 @@ export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     console.log("ran")
     const [setting, setSetting] = useState(false)
     const [value, setValue]= useState("")
-    const [extra, SetExtra]=useState<string | number>("")
+    const [extra, SetExtra]=useState<string>("")
 
-    const toggleOverlaySettings = (val:string, extra?:string|number) => {
+    const toggleOverlaySettings = (val:string, extra?:string) => {
        const check = settingOptionsAllowed.includes(val)
        if (check === true) {
         setValue(val)

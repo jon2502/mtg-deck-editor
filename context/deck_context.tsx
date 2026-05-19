@@ -23,7 +23,7 @@ interface DeckContextType {
     importDecks: () => void
     importDeck: (id:string) => void
     addCategory:(categoryName: string) => void
-    addcard: () => void
+    addCard: () => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -40,7 +40,7 @@ const deafultDeckContextType: DeckContextType = {
     importDecks:() => {},
     importDeck:() => {},
     addCategory:() => {},
-    addcard:() => {}
+    addCard:() => {}
 }
 
 
@@ -83,13 +83,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         console.log(deckinfo)
     }
 
-    async function addcard(){
+    async function addCard(){
         return
     }
 
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addcard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard}}>
             {children}
         </DeckContext.Provider>
     )

@@ -113,8 +113,8 @@ const AllCards = () => {
     </div>
     <section>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-          {cards.map((card:{oracleID:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
-          <div key={card.name}>
+          {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
+          <div key={card.oracle_id}>
             <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
               <Image
                 src={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal}
@@ -148,7 +148,7 @@ const AllCards = () => {
                 </div>
                 
               )}
-              <button onClick={() => toggleOverlaySettings("Add-Card")}>+</button>
+              <button onClick={() => toggleOverlaySettings("Add-Card",card.oracle_id)}>+</button>
             </div>
           </div>
         ))}
