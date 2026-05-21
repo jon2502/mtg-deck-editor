@@ -7,7 +7,7 @@ import { useDeckContext } from "@/context/deck_context"
 import { searchPrintings } from '@/services/scryfall/GETAllPrintings'
 
 function overlay() {
-  const [printings, setPrintings] = useState<string[]>([])
+  const [printings, setPrintings] = useState([])
   const {setting, value, extra, shutdown} = useOverlayContext()
   const {deckinfo, importDecks, addCategory, addCard} = useDeckContext()
   const router = useRouter()
@@ -39,7 +39,11 @@ function overlay() {
   }
   
   async function card(formData: FormData) {
-    
+    console.log(formData)
+    const categoryIndex = Number(formData.get("categoryname") as string)
+    const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
+    addCard(categoryIndex, set, collectorNumber)
+    shutdown()
   }
 
   async function DeleteFunction(id:string){
@@ -107,20 +111,20 @@ function overlay() {
           </form>
         </div>
       case "Add-Card":
-        console.log(printings)
+        console.log(deckinfo)
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <h2>Add Card</h2>
           <form action={card}>
             <select name="selectCategory" id="selectCategory" required>
-                {deckinfo.deck.map(category => (
-                  <option value={category.categoryName}>{category.categoryName}</option>
+                {deckinfo.deck.map((category, index) => (
+                  <option key={index} value={index}>{category.categoryName}</option>
                 ))}
             </select>
             <select name="selectPrinting" id="selectPrinting" required>
-              {printings.map(printing => (
+              {printings.map((printing:{set:string, collector_number:string, set_name:string}) => (
                 <option
-                  data-set = {printing.set}
-                  data-collector-number = {printing.collector_number}
+                  key = {`${printing.set}-${printing.collector_number}`}
+                  value={`${printing.set}/${printing.collector_number}`}
                 >
                   {printing.set_name} #{printing.collector_number}
                 </option>

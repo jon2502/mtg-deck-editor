@@ -1,4 +1,5 @@
 'use client'
+import { count } from 'console';
 import { createContext, useContext, useEffect, useState } from 'react'
 
 interface Deckinfo {
@@ -23,7 +24,7 @@ interface DeckContextType {
     importDecks: () => void
     importDeck: (id:string) => void
     addCategory:(categoryName: string) => void
-    addCard: () => void
+    addCard: (categoryIndex:number, set:string, collectorNumber:string) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -71,6 +72,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             categoryName: newCategoryName,
             cards: []
         }
+
         setDeckinfo(
             currentdeck => ({
                 // create a copy of the current deck info
@@ -80,11 +82,32 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 deck: [...currentdeck.deck, newcategory]
             })
         )
-        console.log(deckinfo)
     }
 
-    async function addCard(){
-        return
+    async function addCard(categoryIndex:number, set:string, collectorNumber:string){
+        const addedCard = {
+            count: 1,
+            set: set,
+            collector_number: collectorNumber,
+        }
+        
+        setDeckinfo(
+            currentdeck => ({
+                ...currentdeck,
+                deck: currentdeck.deck.map((category, index)=>
+                    index == categoryIndex
+                    //if true set up and object for the category with the cards inside
+                    ? {...category,
+                        cards:[...category.cards, addedCard]
+                    }
+                    //else keep the old category
+                    : category
+                )
+            })
+        )
+        console.log(deckinfo)
+        console.log(deckinfo.deck[categoryIndex])
+        console.log(deckinfo.deck[categoryIndex].cards)
     }
 
 

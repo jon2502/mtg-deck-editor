@@ -1,6 +1,7 @@
 "use client";
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 
@@ -12,9 +13,22 @@ const Deck = ({id}:DeckProps) => {
     //const [deck, setDeck] = useState<Decktypes[]>([])
     const {toggleOverlaySettings} = useOverlayContext()
     const {deckinfo, importDeck} = useDeckContext()
+    const router = useRouter()
+    
+    
 
     async function save() {
-        
+         fetch("http://localhost:3500/SaveDeck",{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(deckinfo)
+    })
+    /*.then(res => res.json())
+    .then(data => {
+      router.push(`/Decks/Edit/${data._id}`)
+    })*/
     }
 
     useEffect(() =>{
