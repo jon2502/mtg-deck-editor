@@ -7,15 +7,7 @@ import { useDeckContext } from "@/context/deck_context"
 const page = () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {decklist, importDecks}= useDeckContext()
-  //const [decks, setDecks] = useState([])
 
-  /*async function importDecks() {
-        console.log('test')
-        const response = await fetch (`http://localhost:3500/GetDecks`)
-        const decks = await response.json()
-        setDecks(decks)
-        console.log(decks)
-    }*/
     useEffect(() =>{
       importDecks()
     },[])

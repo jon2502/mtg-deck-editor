@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
+import {searchCard} from "@/services/scryfall/GETCard"
 
 interface DeckProps {
   id: string;
@@ -15,9 +16,12 @@ const Deck = ({id}:DeckProps) => {
     const {deckinfo, importDeck} = useDeckContext()
     const router = useRouter()
     
-    
+    async function getcard(set:string, collector_number:string) {
+        var card = await searchCard(set,collector_number)
+    }
 
     async function save() {
+        console.log(deckinfo)
          fetch("http://localhost:3500/SaveDeck",{
           method: 'POST',
           headers: {
@@ -25,10 +29,6 @@ const Deck = ({id}:DeckProps) => {
           },
           body: JSON.stringify(deckinfo)
     })
-    /*.then(res => res.json())
-    .then(data => {
-      router.push(`/Decks/Edit/${data._id}`)
-    })*/
     }
 
     useEffect(() =>{
@@ -47,7 +47,8 @@ const Deck = ({id}:DeckProps) => {
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
                         <div key={card.collector_number}>
-
+                            <p>{card.set}</p>
+                            <p>{card.collector_number}</p>
                         </div>
                     ))}
                 </div>

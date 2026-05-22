@@ -111,7 +111,6 @@ function overlay() {
           </form>
         </div>
       case "Add-Card":
-        console.log(deckinfo)
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <h2>Add Card</h2>
           <form action={card}>

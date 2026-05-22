@@ -1,12 +1,5 @@
 
-interface CardParams {
-  set: string;
-  collector_number: number;
-}
-
-export const searchCard = async (params: CardParams) => {
-    const { set, collector_number} = params;
-
+export const searchCard = async (set: string, collector_number:string) => {
     var url = `https://api.scryfall.com/cards/${set}/${collector_number}`;
 
     const res = await fetch(url);

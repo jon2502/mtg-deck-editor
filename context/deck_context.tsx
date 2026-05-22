@@ -63,7 +63,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     async function importDeck(id: string) {
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()
-        //console.log(deck.deck)
         setDeckinfo(deck)
     }
 
@@ -100,14 +99,11 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                     ? {...category,
                         cards:[...category.cards, addedCard]
                     }
-                    //else keep the old category
+                    //else keep the cards of the category unchanged 
                     : category
                 )
             })
         )
-        console.log(deckinfo)
-        console.log(deckinfo.deck[categoryIndex])
-        console.log(deckinfo.deck[categoryIndex].cards)
     }
 
 
