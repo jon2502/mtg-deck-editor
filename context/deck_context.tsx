@@ -1,6 +1,6 @@
 'use client'
-import { count } from 'console';
 import { createContext, useContext, useEffect, useState } from 'react'
+import {searchCard} from "@/services/scryfall/GETCard"
 
 interface Deckinfo {
     name: string;
@@ -13,6 +13,7 @@ interface Deckinfo {
         count: number;
         set:string; 
         collector_number:string
+        art:string
     }>
 }>;
 }
@@ -24,7 +25,8 @@ interface DeckContextType {
     importDecks: () => void
     importDeck: (id:string) => void
     addCategory:(categoryName: string) => void
-    addCard: (categoryIndex:number, set:string, collectorNumber:string) => void
+    addCard: (categoryIndex:number, set:string, collectorNumber:string, art:string) => void
+    
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -83,11 +85,12 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
     }
 
-    async function addCard(categoryIndex:number, set:string, collectorNumber:string){
+    async function addCard(categoryIndex:number, set:string, collectorNumber:string, art:string){
         const addedCard = {
             count: 1,
             set: set,
             collector_number: collectorNumber,
+            art: art
         }
         
         setDeckinfo(
@@ -101,6 +104,31 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                     }
                     //else keep the cards of the category unchanged 
                     : category
+                )
+            })
+        )
+    }
+
+    async function addcardInfo(set:string, collectorNumber:string, art:string) {
+        const cardData = {
+            count: 1,
+            set: set,
+            collector_number: collectorNumber,
+            art: art
+        }
+
+        setDeckinfo(
+            currentdeck => ({
+                ...currentdeck,
+                deck: currentdeck.deck.map((category)=> ({
+                    ...category,
+                    cards: category.cards.map((card)=>
+                        card.set == set && card.collector_number == collectorNumber
+                        ? {...card,
+                            cardData
+                        }
+                        : card
+                )})
                 )
             })
         )

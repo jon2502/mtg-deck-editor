@@ -2,6 +2,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image';
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 import {searchCard} from "@/services/scryfall/GETCard"
@@ -11,14 +12,9 @@ interface DeckProps {
 }
 
 const Deck = ({id}:DeckProps) => {
-    //const [deck, setDeck] = useState<Decktypes[]>([])
     const {toggleOverlaySettings} = useOverlayContext()
     const {deckinfo, importDeck} = useDeckContext()
     const router = useRouter()
-    
-    async function getcard(set:string, collector_number:string) {
-        var card = await searchCard(set,collector_number)
-    }
 
     async function save() {
         console.log(deckinfo)
@@ -33,8 +29,21 @@ const Deck = ({id}:DeckProps) => {
 
     useEffect(() =>{
         importDeck(id)
-    },[])
+        /*for (let i = 0; i < deckinfo.deck.length; i++) {
+            console.log(deckinfo.deck[i])
+            deckinfo.deck[i].cards.map((card)=>(
+                setcardInfo(card.set, card.collector_number)
+            ))
+         }*/
+
         
+    },[])
+
+     async function setcardInfo(set:string, collectorNumber:string) {
+        const cardData = await searchCard(set,collectorNumber)
+        //addcardInfo(set, collectorNumber, cardData.image_uris.normal)
+    }
+
     return (
         <section>
             <div>
@@ -47,8 +56,7 @@ const Deck = ({id}:DeckProps) => {
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
                         <div key={card.collector_number}>
-                            <p>{card.set}</p>
-                            <p>{card.collector_number}</p>
+
                         </div>
                     ))}
                 </div>
@@ -58,4 +66,11 @@ const Deck = ({id}:DeckProps) => {
         </section>
     )
 }
+/*
+                            <Image
+                                src={card.art}
+                                alt="test"
+                                width="100"
+                                height="100"
+                            />*/
 export default Deck

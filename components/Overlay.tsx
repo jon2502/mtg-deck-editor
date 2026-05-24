@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 import { searchPrintings } from '@/services/scryfall/GETAllPrintings'
+import { searchCard } from '@/services/scryfall/GETCard'
 
 function overlay() {
   const [printings, setPrintings] = useState([])
@@ -42,8 +43,11 @@ function overlay() {
     console.log(formData)
     const categoryIndex = Number(formData.get("categoryname") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
-    addCard(categoryIndex, set, collectorNumber)
+    const cardData = await searchCard(set,collectorNumber)
+    console.log(cardData)
+    addCard(categoryIndex, set, collectorNumber, cardData.art)
     shutdown()
+    console.log(deckinfo)
   }
 
   async function DeleteFunction(id:string){
