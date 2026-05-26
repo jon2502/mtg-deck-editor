@@ -63,9 +63,29 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     async function importDeck(id: string) {
+        //fetch deck
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()
-        setDeckinfo(deck)
+
+        //wait for all categories to be done
+        const deckExtraInfo = await Promise.all(
+            // loop through each category in the deck
+            deck.deck.map(async(category:{cards:[{set:string, collector_number:string}]})=>({
+                // create a copy of categories
+                ...category,
+                // wait for all cards to be done
+                cards: await Promise.all(
+                // loop through each card in the category
+                category.cards.map(async(card)=>{
+                     // fetch the full card data from Scryfall using set and collector number
+                    var newData = await searchCard(card.set, card.collector_number)
+                    // merge the database card with the Scryfall card data into one object
+                    return {...card, ...newData}
+                }))
+            }))
+        )
+        // set the deck state once with all the additional data
+        setDeckinfo({...deck, deck:deckExtraInfo})
     }
 
     async function addCategory(newCategoryName: string) {

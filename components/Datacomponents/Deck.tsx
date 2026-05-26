@@ -28,21 +28,8 @@ const Deck = ({id}:DeckProps) => {
     }
 
     useEffect(() =>{
-        importDeck(id)
-        /*for (let i = 0; i < deckinfo.deck.length; i++) {
-            console.log(deckinfo.deck[i])
-            deckinfo.deck[i].cards.map((card)=>(
-                setcardInfo(card.set, card.collector_number)
-            ))
-         }*/
-
-        
+        importDeck(id)        
     },[])
-
-     async function setcardInfo(set:string, collectorNumber:string) {
-        const cardData = await searchCard(set,collectorNumber)
-        //addcardInfo(set, collectorNumber, cardData.image_uris.normal)
-    }
 
     return (
         <section>
@@ -56,7 +43,12 @@ const Deck = ({id}:DeckProps) => {
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
                         <div key={card.collector_number}>
-
+                            <Image
+                                src={card.art}
+                                alt="test"
+                                width="100"
+                                height="100"
+                            />
                         </div>
                     ))}
                 </div>
@@ -66,11 +58,6 @@ const Deck = ({id}:DeckProps) => {
         </section>
     )
 }
-/*
-                            <Image
-                                src={card.art}
-                                alt="test"
-                                width="100"
-                                height="100"
-                            />*/
+
+
 export default Deck

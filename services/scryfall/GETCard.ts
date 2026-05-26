@@ -4,7 +4,9 @@ export const searchCard = async (set: string, collector_number:string) => {
 
     const res = await fetch(url);
     const result = await res.json();
-    const data = {art:result.image_uris.normal}
+    const data = {
+        art:result.image_uris.normal
+    }
 
     if (!res.ok) {
         throw new Error(`Scryfall search failed: ${res.status}`);
