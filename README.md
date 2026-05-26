@@ -1,6 +1,19 @@
 # MTG Deck editor
 a custom made MTG deck editor
 
+## Made with
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Supabase (PostgreSQL)
+- NPM
+- API's
+    - Scryfall
+    - Custom backend
+
+## Link to backend code
+https://github.com/jon2502/MTG-deck-editor-backend
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
