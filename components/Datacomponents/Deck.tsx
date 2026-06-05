@@ -17,7 +17,6 @@ const Deck = ({id}:DeckProps) => {
     const router = useRouter()
 
     async function save() {
-        console.log(deckinfo)
          fetch("http://localhost:3500/SaveDeck",{
           method: 'POST',
           headers: {
@@ -49,6 +48,9 @@ const Deck = ({id}:DeckProps) => {
                                 width="100"
                                 height="100"
                             />
+                            <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number})}>
+                                update
+                            </button>
                         </div>
                     ))}
                 </div>

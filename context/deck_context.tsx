@@ -12,8 +12,9 @@ interface Deckinfo {
     cards: Array<{
         count: number;
         set:string; 
-        collector_number:string
-        art:string
+        collector_number:string;
+        art:string;
+        oracleid:string;
     }>
 }>;
 }
@@ -22,11 +23,11 @@ interface Deckinfo {
 interface DeckContextType {
     decklist: Deckinfo[];
     deckinfo: Deckinfo;
-    importDecks: () => void
-    importDeck: (id:string) => void
-    addCategory:(categoryName: string) => void
-    addCard: (categoryIndex:number, set:string, collectorNumber:string, art:string) => void
-    
+    importDecks: () => void;
+    importDeck: (id:string) => void;
+    addCategory:(categoryName: string) => void;
+    addCard: (categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string) => void;
+    updateCard: (count:number, set:string, collectorNumber:string, art:string) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -43,7 +44,8 @@ const deafultDeckContextType: DeckContextType = {
     importDecks:() => {},
     importDeck:() => {},
     addCategory:() => {},
-    addCard:() => {}
+    addCard:() => {},
+    updateCard:() => {},
 }
 
 
@@ -105,12 +107,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
     }
 
-    async function addCard(categoryIndex:number, set:string, collectorNumber:string, art:string){
+    async function addCard(categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string){
         const addedCard = {
             count: 1,
             set: set,
             collector_number: collectorNumber,
-            art: art
+            art: art,
+            oracleid: oracleid
         }
         
         setDeckinfo(
@@ -129,14 +132,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
     }
 
-    async function addcardInfo(set:string, collectorNumber:string, art:string) {
+    async function updateCard(count:number, set:string, collectorNumber:string, art:string){
         const cardData = {
-            count: 1,
+            count: count,
             set: set,
             collector_number: collectorNumber,
             art: art
         }
-
         setDeckinfo(
             currentdeck => ({
                 ...currentdeck,
@@ -153,10 +155,11 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             })
         )
     }
+    
 
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard}}>
             {children}
         </DeckContext.Provider>
     )

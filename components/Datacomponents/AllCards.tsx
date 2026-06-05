@@ -95,7 +95,7 @@ const AllCards = () => {
  useEffect(()=>{
     fetchNewPage()
   },[page])
-  console.log(cards)
+
   return(
   <section className=''>
     <div>
@@ -148,7 +148,7 @@ const AllCards = () => {
                 </div>
                 
               )}
-              <button onClick={() => toggleOverlaySettings("Add-Card",card.oracle_id)}>+</button>
+              <button onClick={() => toggleOverlaySettings("Add-Card",{oracleid:card.oracle_id})}>+</button>
             </div>
           </div>
         ))}

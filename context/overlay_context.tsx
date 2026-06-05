@@ -1,18 +1,30 @@
 'use client'
 import { createContext, useContext, useState } from 'react'
 
+interface ExtraInfomation {
+    deckid?: string,
+    oracleid?: string,
+    set?: string,
+    collector_number?: string
+}
+
 interface OverlayContextType  {
     setting: boolean,
     value: string,
-    extra: string,
-    toggleOverlaySettings: (val:string, extra?:string) => void
+    extra: ExtraInfomation,
+    toggleOverlaySettings: (val:string, extra?:ExtraInfomation) => void
     shutdown: () => void
 }
 
 const defaultOverlayContext: OverlayContextType = {
   setting: false,
   value: "",
-  extra: "",
+  extra: {
+    deckid: "",
+    oracleid: "",
+    set: "",
+    collector_number: "",
+  },
   toggleOverlaySettings: () => {},
   shutdown:() => {}
 }
@@ -21,15 +33,14 @@ const OverlayContext = createContext<OverlayContextType>(
   defaultOverlayContext
 );
 
-const settingOptionsAllowed = ["save", "create","Add-Category", "Add-Card", "delete"]
+const settingOptionsAllowed = ["save", "create","Add-Category", "Add-Card", "Update-Card", "delete"]
 
 export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
-    console.log("ran")
     const [setting, setSetting] = useState(false)
     const [value, setValue]= useState("")
-    const [extra, SetExtra]=useState<string>("")
+    const [extra, SetExtra]=useState({})
 
-    const toggleOverlaySettings = (val:string, extra?:string) => {
+    const toggleOverlaySettings = (val:string, extra?:ExtraInfomation) => {
        const check = settingOptionsAllowed.includes(val)
        if (check === true) {
         setValue(val)
@@ -42,7 +53,7 @@ export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
 
     const shutdown = () => {
         setValue("")
-        SetExtra("")
+        SetExtra({})
         setSetting(false)
     }
 

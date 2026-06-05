@@ -24,7 +24,7 @@ const page = () => {
               <span>Edit</span>
             </Link>
           </button>
-          <button onClick={()=>toggleOverlaySettings("delete", deck._id)}>
+          <button onClick={()=>toggleOverlaySettings("delete", {deckid:deck._id})}>
             <span>
               Delete
             </span>

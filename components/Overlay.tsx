@@ -9,8 +9,9 @@ import { searchCard } from '@/services/scryfall/GETCard'
 
 function overlay() {
   const [printings, setPrintings] = useState([])
+  const [selected, setSelected] = useState("");
   const {setting, value, extra, shutdown} = useOverlayContext()
-  const {deckinfo, importDecks, addCategory, addCard} = useDeckContext()
+  const {deckinfo, importDecks, addCategory, addCard, updateCard} = useDeckContext()
   const router = useRouter()
 
   async function formAction(formData: FormData){
@@ -45,9 +46,19 @@ function overlay() {
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const cardData = await searchCard(set,collectorNumber)
     console.log(cardData)
-    addCard(categoryIndex, set, collectorNumber, cardData.art)
+    addCard(categoryIndex, set, collectorNumber, cardData.art, cardData.oracleid)
     shutdown()
-    console.log(deckinfo)
+  }
+
+  async function update(formData: FormData,) {
+    console.log(formData)
+    const categoryIndex = Number(formData.get("categoryname") as string)
+    //const [set, collectorNumber] = originaldata.split("/")
+    const [newset, newcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
+    const cardData = await searchCard(newset,newcollectorNumber)
+    console.log(cardData)
+    //updateCard(categoryIndex, set, collectorNumber, cardData.art)
+    shutdown()
   }
 
   async function DeleteFunction(id:string){
@@ -63,12 +74,14 @@ function overlay() {
 
   useEffect(() => {
      switch(value){
+      case "Update-Card":
+        setSelected(`${extra.set}/${extra.collector_number}`);
       case "Add-Card":
-        searchPrintings(extra).then(printings => setPrintings(printings.data))
+        searchPrintings(extra.oracleid!).then(printings => setPrintings(printings.data))
       break
      }
   
-}, [setting, value])
+}, [setting, value, extra])
 
   if (!setting) {
     return null
@@ -137,11 +150,36 @@ function overlay() {
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>
         </div>
+      case "Update-Card":
+
+        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+          <h2>Add Card</h2>
+          <form action={update}>
+            <select name="selectCategory" id="selectCategory" required>
+                {deckinfo.deck.map((category, index) => (
+                  <option key={index} value={index}>{category.categoryName}</option>
+                ))}
+            </select>
+            <select name="selectPrinting" id="selectPrinting" value={selected} onChange={(e) => setSelected(e.target.value)} required>
+              {printings.map((printing:{set:string, collector_number:string, set_name:string}) => (
+                <option
+                  key = {`${printing.set}-${printing.collector_number}`}
+                  value={`${printing.set}/${printing.collector_number}`}
+                  
+                >
+                  {printing.set_name} #{printing.collector_number}
+                </option>
+              ))}
+            </select>
+            <button type='submit'>Create</button>
+            <button onClick={()=>shutdown()}>Cancel</button>
+          </form>
+        </div>
       case "delete":
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <div>
             <h1>Are you sure that you want to delete this deck</h1>
-            <button onClick={()=>DeleteFunction(extra)}>Yes</button>
+            <button onClick={()=>DeleteFunction(extra.deckid!)}>Yes</button>
             <button onClick={()=>shutdown()}>No</button>
           </div>
         </div>
