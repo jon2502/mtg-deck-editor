@@ -5,7 +5,8 @@ interface ExtraInfomation {
     deckid?: string,
     oracleid?: string,
     set?: string,
-    collector_number?: string
+    collector_number?: string,
+    index?: number
 }
 
 interface OverlayContextType  {
@@ -24,6 +25,7 @@ const defaultOverlayContext: OverlayContextType = {
     oracleid: "",
     set: "",
     collector_number: "",
+    index: 0
   },
   toggleOverlaySettings: () => {},
   shutdown:() => {}

@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useRef } from 'react'
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
@@ -52,12 +52,13 @@ function overlay() {
 
   async function update(formData: FormData,) {
     console.log(formData)
-    const categoryIndex = Number(formData.get("categoryname") as string)
-    //const [set, collectorNumber] = originaldata.split("/")
-    const [newset, newcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
-    const cardData = await searchCard(newset,newcollectorNumber)
+    const [selectedset, selectedsetcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
+    const [set, collectorNumber] = (formData.get("originalSelectedPrinting") as string).split("/")
+    const selectedCategory = Number(formData.get("selectCategory") as string)
+    const orginalCategory = Number(formData.get("orginalCategory") as string)
+    const cardData = await searchCard(selectedset,selectedsetcollectorNumber)
     console.log(cardData)
-    //updateCard(categoryIndex, set, collectorNumber, cardData.art)
+    updateCard(1, selectedCategory, orginalCategory, set, selectedset, collectorNumber, selectedsetcollectorNumber, cardData)
     shutdown()
   }
 
@@ -151,7 +152,8 @@ function overlay() {
           </form>
         </div>
       case "Update-Card":
-
+        const orginalCategory = extra.index;
+        const originalValue = `${extra.set}/${extra.collector_number}`;
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <h2>Add Card</h2>
           <form action={update}>
@@ -171,6 +173,8 @@ function overlay() {
                 </option>
               ))}
             </select>
+            <input type="hidden" name="originalSelectedPrinting" value={originalValue} />
+            <input type="hidden" name="orginalCategory" value={orginalCategory} />
             <button type='submit'>Create</button>
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>

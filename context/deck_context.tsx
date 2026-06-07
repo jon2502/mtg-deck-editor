@@ -19,7 +19,6 @@ interface Deckinfo {
 }>;
 }
 
-
 interface DeckContextType {
     decklist: Deckinfo[];
     deckinfo: Deckinfo;
@@ -27,7 +26,18 @@ interface DeckContextType {
     importDeck: (id:string) => void;
     addCategory:(categoryName: string) => void;
     addCard: (categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string) => void;
-    updateCard: (count:number, set:string, collectorNumber:string, art:string) => void
+    updateCard: (
+        count:number,
+        selectedCategory:number,
+        orginalCategory:number,
+        set:string,
+        selectedset:string,
+        collectorNumber:string,
+        selectedsetcollectorNumber:string, 
+        cardData:{
+         art:string;
+         oracleid:string
+    }) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -68,7 +78,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         //fetch deck
         const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
         const deck = await response.json()
-
+        console.log(deck)
         //wait for all categories to be done
         const deckExtraInfo = await Promise.all(
             // loop through each category in the deck
@@ -132,14 +142,50 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
     }
 
-    async function updateCard(count:number, set:string, collectorNumber:string, art:string){
-        const cardData = {
+    async function updateCard(
+        count:number,
+        selectedCategory:number,
+        orginalCategory:number,
+        set:string,
+        selectedset:string,
+        collectorNumber:string,
+        selectedsetcollectorNumber:string,
+        cardData:{art:string, oracleid:string}){
+
+         const addedCard = {
             count: count,
-            set: set,
-            collector_number: collectorNumber,
-            art: art
+            set: selectedset,
+            collector_number: selectedsetcollectorNumber,
+            art: cardData.art,
+            oracleid: cardData.oracleid
         }
+        console.log(set)
+        console.log(collectorNumber)
         setDeckinfo(
+            currentdeck => ({
+                ...currentdeck,
+                deck: currentdeck.deck.map((category, index)=>
+                    index == selectedCategory
+                    //if true set up and object for the category with the cards inside
+                    ? {...category,
+                        cards:[...category.cards, addedCard]
+                    }
+                    : index == orginalCategory && selectedCategory != orginalCategory
+                    ? {...category,
+                        cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
+                    }: {
+                        ...category,
+                        cards: category.cards.map((card)=>
+                            card.set == set && card.collector_number == collectorNumber
+                            ? {...card,
+                                cardData
+                                }
+                            : card
+                        )})
+                    }
+                )
+            )
+       /* setDeckinfo(
             currentdeck => ({
                 ...currentdeck,
                 deck: currentdeck.deck.map((category)=> ({
@@ -153,7 +199,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 )})
                 )
             })
-        )
+        )*/
     }
     
 
