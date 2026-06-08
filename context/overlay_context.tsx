@@ -6,7 +6,7 @@ interface ExtraInfomation {
     oracleid?: string,
     set?: string,
     collector_number?: string,
-    index?: number
+    index?: number,
 }
 
 interface OverlayContextType  {

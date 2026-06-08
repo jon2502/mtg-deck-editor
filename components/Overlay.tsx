@@ -9,7 +9,8 @@ import { searchCard } from '@/services/scryfall/GETCard'
 
 function overlay() {
   const [printings, setPrintings] = useState([])
-  const [selected, setSelected] = useState("");
+  const [selectedCard, setselectedCard] = useState("");
+  const [selectedCategory, setselectedCategory] = useState(0)
   const {setting, value, extra, shutdown} = useOverlayContext()
   const {deckinfo, importDecks, addCategory, addCard, updateCard} = useDeckContext()
   const router = useRouter()
@@ -76,7 +77,8 @@ function overlay() {
   useEffect(() => {
      switch(value){
       case "Update-Card":
-        setSelected(`${extra.set}/${extra.collector_number}`);
+        setselectedCard(`${extra.set}/${extra.collector_number}`);
+        setselectedCategory(extra.index!)
       case "Add-Card":
         searchPrintings(extra.oracleid!).then(printings => setPrintings(printings.data))
       break
@@ -157,12 +159,12 @@ function overlay() {
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <h2>Add Card</h2>
           <form action={update}>
-            <select name="selectCategory" id="selectCategory" required>
+            <select name="selectCategory" id="selectCategory" value={selectedCategory} onChange={(e) => setselectedCategory(Number(e.target.value))} required>
                 {deckinfo.deck.map((category, index) => (
                   <option key={index} value={index}>{category.categoryName}</option>
                 ))}
             </select>
-            <select name="selectPrinting" id="selectPrinting" value={selected} onChange={(e) => setSelected(e.target.value)} required>
+            <select name="selectPrinting" id="selectPrinting" value={selectedCard} onChange={(e) => setselectedCard(e.target.value)} required>
               {printings.map((printing:{set:string, collector_number:string, set_name:string}) => (
                 <option
                   key = {`${printing.set}-${printing.collector_number}`}

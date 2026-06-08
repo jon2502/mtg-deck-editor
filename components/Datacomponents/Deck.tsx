@@ -48,7 +48,7 @@ const Deck = ({id}:DeckProps) => {
                                 width="100"
                                 height="100"
                             />
-                            <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number,index:index})}>
+                            <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:index})}>
                                 update
                             </button>
                         </div>

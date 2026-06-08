@@ -152,54 +152,38 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         selectedsetcollectorNumber:string,
         cardData:{art:string, oracleid:string}){
 
-         const addedCard = {
+         const updatedCardInfo = {
             count: count,
             set: selectedset,
             collector_number: selectedsetcollectorNumber,
             art: cardData.art,
             oracleid: cardData.oracleid
         }
-        console.log(set)
-        console.log(collectorNumber)
+
         setDeckinfo(
             currentdeck => ({
                 ...currentdeck,
                 deck: currentdeck.deck.map((category, index)=>
-                    index == selectedCategory
+                    index == selectedCategory && selectedCategory != orginalCategory
                     //if true set up and object for the category with the cards inside
                     ? {...category,
-                        cards:[...category.cards, addedCard]
+                        cards:[...category.cards, updatedCardInfo]
                     }
                     : index == orginalCategory && selectedCategory != orginalCategory
                     ? {...category,
                         cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
-                    }: {
+                    }:{
                         ...category,
                         cards: category.cards.map((card)=>
                             card.set == set && card.collector_number == collectorNumber
                             ? {...card,
-                                cardData
-                                }
+                                card: updatedCardInfo
+                            }
                             : card
                         )})
                     }
                 )
             )
-       /* setDeckinfo(
-            currentdeck => ({
-                ...currentdeck,
-                deck: currentdeck.deck.map((category)=> ({
-                    ...category,
-                    cards: category.cards.map((card)=>
-                        card.set == set && card.collector_number == collectorNumber
-                        ? {...card,
-                            cardData
-                        }
-                        : card
-                )})
-                )
-            })
-        )*/
     }
     
 
@@ -211,4 +195,3 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     )
 }
 export const useDeckContext = () => useContext(DeckContext)
-
