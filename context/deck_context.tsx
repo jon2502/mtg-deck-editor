@@ -176,9 +176,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                         ...category,
                         cards: category.cards.map((card)=>
                             card.set == set && card.collector_number == collectorNumber
-                            ? {...card,
-                                card: updatedCardInfo
-                            }
+                            ? updatedCardInfo
                             : card
                         )})
                     }
