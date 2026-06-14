@@ -37,7 +37,7 @@ const Deck = ({id}:DeckProps) => {
                 <button onClick={()=>toggleOverlaySettings("Add-Category")}>Add Category</button>
             </div>
             <div>
-                {deckinfo.deck.map((catagories, index)=>(
+                {deckinfo.deck.map((catagories, index:number)=>(
                 <div key={catagories.categoryName}>
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
@@ -49,7 +49,10 @@ const Deck = ({id}:DeckProps) => {
                                 height="100"
                             />
                             <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:index})}>
-                                update
+                                Update
+                            </button>
+                            <button onClick={()=>toggleOverlaySettings("Remove-Card", {set:card.set, collector_number:card.collector_number, index:index})}>
+                                Remove
                             </button>
                         </div>
                     ))}

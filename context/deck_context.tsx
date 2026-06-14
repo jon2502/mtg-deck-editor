@@ -38,6 +38,7 @@ interface DeckContextType {
          art:string;
          oracleid:string
     }) => void
+    removeCard:(categoryIndex:number, set:string, collectorNumber:string) => void
 }
 
 const deafultDeckContextType: DeckContextType = {
@@ -56,6 +57,7 @@ const deafultDeckContextType: DeckContextType = {
     addCategory:() => {},
     addCard:() => {},
     updateCard:() => {},
+    removeCard:() => {}
 }
 
 
@@ -183,11 +185,28 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 )
             )
     }
+
+    async function removeCard(categoryIndex:number, set:string, collectorNumber:string){
+        setDeckinfo(
+            currentdeck => ({
+                ...currentdeck,
+                deck: currentdeck.deck.map((category, index)=>
+                    index == categoryIndex
+                    //if true set up and object for the category with the cards inside
+                    ? {...category,
+                        cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
+                    }
+                    //else keep the cards of the category unchanged 
+                    : category
+                )
+            })
+        )
+    }
     
 
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard, removeCard}}>
             {children}
         </DeckContext.Provider>
     )

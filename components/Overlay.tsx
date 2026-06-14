@@ -12,7 +12,7 @@ function overlay() {
   const [selectedCard, setselectedCard] = useState("");
   const [selectedCategory, setselectedCategory] = useState(0)
   const {setting, value, extra, shutdown} = useOverlayContext()
-  const {deckinfo, importDecks, addCategory, addCard, updateCard} = useDeckContext()
+  const {deckinfo, importDecks, addCategory, addCard, updateCard, removeCard} = useDeckContext()
   const router = useRouter()
 
   async function formAction(formData: FormData){
@@ -46,7 +46,6 @@ function overlay() {
     const categoryIndex = Number(formData.get("categoryname") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const cardData = await searchCard(set,collectorNumber)
-    console.log(cardData)
     addCard(categoryIndex, set, collectorNumber, cardData.art, cardData.oracleid)
     shutdown()
   }
@@ -180,6 +179,14 @@ function overlay() {
             <button type='submit'>Create</button>
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>
+        </div>
+      case "Remove-Card":
+        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+          <div>
+            <h1>Are you sure that you want to remove this from your deck deck</h1>
+            <button onClick={()=>{removeCard(extra.index!, extra.set!, extra.collector_number!); shutdown();}}>Yes</button>
+            <button onClick={()=>shutdown()}>No</button>
+          </div>
         </div>
       case "delete":
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
