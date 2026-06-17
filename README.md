@@ -5,7 +5,6 @@ a custom made MTG deck editor
 - Next.js
 - TypeScript
 - Tailwind CSS
-- Supabase (PostgreSQL)
 - NPM
 - API's
     - Scryfall
