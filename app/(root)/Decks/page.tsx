@@ -15,7 +15,7 @@ const page = () => {
   return (
     <section>
       {decklist.map((deck: {name:string, format:string, color:string, _id:string}) =>(
-        <div key={deck.name} className='m-[1%]'>
+        <div key={deck._id} className='m-[1%]'>
           <h1>{deck.name}</h1>
           <p>{deck.format}</p>
           <p>{deck.color}</p>

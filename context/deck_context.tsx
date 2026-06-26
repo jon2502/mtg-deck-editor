@@ -16,6 +16,16 @@ interface Deckinfo {
         art:string;
         oracleid:string;
     }>
+    categories?: Array<{
+        categoryName: string;
+        cards: Array<{
+            count: number;
+            set:string; 
+            collector_number:string;
+            art:string;
+            oracleid:string;
+        }>
+    }>
 }>;
 }
 
@@ -71,14 +81,14 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
 
     async function importDecks() {
-        const response = await fetch (`http://localhost:3500/GetDecks`)
+        const response = await fetch (`http://localhost:3500/Decks`)
         const decks = await response.json()
         setDecks(decks)
     }
 
     async function importDeck(id: string) {
         //fetch deck
-        const response = await fetch (`http://localhost:3500/Getdeck/${id}`)
+        const response = await fetch (`http://localhost:3500/Deck/${id}`)
         const deck = await response.json()
         console.log(deck)
         //wait for all categories to be done
@@ -114,7 +124,12 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 ...currentdeck,
                 /*create a new deck array with all the old content in it pluss the new one,
                 this will then replace the old array and the content will re render*/
-                deck: [...currentdeck.deck, newcategory]
+                deck: currentdeck.deck.map((category) =>
+                    category.categoryName == "Main Deck"
+                    ?{...category,
+                        categories:[...category.categories!, newcategory]
+                    }: category
+                )
             })
         )
     }

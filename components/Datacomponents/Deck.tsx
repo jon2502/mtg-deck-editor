@@ -17,7 +17,7 @@ const Deck = ({id}:DeckProps) => {
     const router = useRouter()
 
     async function save() {
-         fetch("http://localhost:3500/SaveDeck",{
+         fetch("http://localhost:3500/Save",{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -38,15 +38,15 @@ const Deck = ({id}:DeckProps) => {
             </div>
             <div>
                 {deckinfo.deck.map((catagories, index:number)=>(
-                <div key={catagories.categoryName}>
+                <div key={catagories.categoryName} className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
                     <p>{catagories.categoryName}</p>
                     {catagories.cards.map((card)=>(
-                        <div key={card.collector_number}>
+                        <div key={card.collector_number} className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
                             <Image
                                 src={card.art}
-                                alt="test"
-                                width="100"
-                                height="100"
+                                alt={card.set+"/"+card.collector_number}
+                                fill
+                                sizes='50vw'
                             />
                             <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:index})}>
                                 Update
@@ -56,6 +56,31 @@ const Deck = ({id}:DeckProps) => {
                             </button>
                         </div>
                     ))}
+                    {catagories.categoryName == "Main Deck" ?(
+                        <>
+                        {catagories.categories!.map((catagories, index:number)=>(
+                            <div key={catagories.categoryName} className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
+                            <p>{catagories.categoryName}</p>
+                            {catagories.cards.map((card)=>(
+                                <div key={card.collector_number} className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
+                                    <Image
+                                        src={card.art}
+                                        alt={card.set+"/"+card.collector_number}
+                                        fill
+                                        sizes='50vw'
+                                    />
+                                    <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:index})}>
+                                        Update
+                                    </button>
+                                    <button onClick={()=>toggleOverlaySettings("Remove-Card", {set:card.set, collector_number:card.collector_number, index:index})}>
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                            </div>
+                        ))}
+                        </>
+                    ):null}
                 </div>
             ))} 
             </div>

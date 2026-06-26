@@ -18,7 +18,9 @@ function overlay() {
   async function formAction(formData: FormData){
     const name = formData.get("name") as string
     const format = formData.get("format") as string
-    fetch("http://localhost:3500/CreateDeck",{
+    console.log(name)
+    console.log(format)
+    fetch("http://localhost:3500/Create",{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -30,12 +32,13 @@ function overlay() {
     })
     .then(res => res.json())
     .then(data => {
+      console.log(data)
       router.push(`/Decks/Edit/${data._id}`)
     })
     shutdown()
   }
 
-  async function category(formData: FormData) {
+  async function Category(formData: FormData) {
     const categoryName = formData.get("categoryname") as string
     addCategory(categoryName)
     shutdown()
@@ -63,7 +66,7 @@ function overlay() {
   }
 
   async function DeleteFunction(id:string){
-    await fetch(`http://localhost:3500/DeleteDeck/${id}`,{
+    await fetch(`http://localhost:3500/Delete/${id}`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +126,7 @@ function overlay() {
       case "Add-Category":
         return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
           <h2>Create new category</h2>
-          <form action={category}>
+          <form action={Category}>
             <input type="text" name="categoryname" id="categoryname" />
             <button type='submit'>Create</button>
             <button onClick={()=>shutdown()}>Cancel</button>
