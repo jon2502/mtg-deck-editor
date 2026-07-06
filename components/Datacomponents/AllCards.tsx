@@ -120,7 +120,7 @@ const AllCards = () => {
                 src={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal}
                 alt="test"
                 fill
-                sizes='50vw'
+                unoptimized
               />
             </div>
             <div>
@@ -128,18 +128,13 @@ const AllCards = () => {
               {card.card_faces ? (
                 <div>
                   <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
-                  {card.card_faces[0].mana_cost || card.card_faces[1].mana_cost && (
-                  <p> {card.card_faces
+                  {card.card_faces.some(face=>face.mana_cost) && (
+                  <p>{card.card_faces
                     .map(face => face.mana_cost)
-                    .filter(cost => cost !== "")
-                    .join(" // ")}
+                    .filter(cost => cost != "")
+                    .join("//")}
                   </p>
                   )}
-                  <p> {card.card_faces
-                    .map(face => face.mana_cost)
-                    .filter(cost => cost !== "")
-                    .join(" // ")}
-                  </p>
                 </div>
               ):(
                 <div>
