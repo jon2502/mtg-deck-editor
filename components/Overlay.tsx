@@ -49,7 +49,7 @@ function overlay() {
     const categoryIndex = Number(formData.get("categoryname") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const cardData = await searchCard(set,collectorNumber)
-    addCard(categoryIndex, set, collectorNumber, cardData.art, cardData.oracleid)
+    addCard(1, categoryIndex, set, collectorNumber, cardData.art, cardData.oracleid)
     shutdown()
   }
 

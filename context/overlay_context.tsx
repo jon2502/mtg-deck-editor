@@ -25,7 +25,6 @@ const defaultOverlayContext: OverlayContextType = {
     oracleid: "",
     set: "",
     collector_number: "",
-    index: 0
   },
   toggleOverlaySettings: () => {},
   shutdown:() => {}
@@ -66,4 +65,3 @@ export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     )
 }
 export const useOverlayContext = () => useContext(OverlayContext)
-

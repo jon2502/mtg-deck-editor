@@ -1,32 +1,26 @@
 'use client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import {searchCard} from "@/services/scryfall/GETCard"
+
+interface card {
+    count: number;
+    set:string; 
+    collector_number:string;
+    art:string;
+    oracleid:string;
+}
+
+interface category {
+    categoryName: string;
+    cards: Array<card>
+}
 
 interface Deckinfo {
     name: string;
     format: string;
     color: string;
     _id: string;
-    deck: Array<{
-    categoryName: string;
-    cards: Array<{
-        count: number;
-        set:string; 
-        collector_number:string;
-        art:string;
-        oracleid:string;
-    }>
-    categories?: Array<{
-        categoryName: string;
-        cards: Array<{
-            count: number;
-            set:string; 
-            collector_number:string;
-            art:string;
-            oracleid:string;
-        }>
-    }>
-}>;
+    deck: Array<category>;
 }
 
 interface DeckContextType {
@@ -35,7 +29,7 @@ interface DeckContextType {
     importDecks: () => void;
     importDeck: (id:string) => void;
     addCategory:(categoryName: string) => void;
-    addCard: (categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string) => void;
+    addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string) => void;
     updateCard: (
         count:number,
         selectedCategory:number,
@@ -79,6 +73,32 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     const [decklist, setDecks] = useState([])
     const [saved, SetSaved]= useState(false)
 
+    // for removing cards
+    function removefunction(category:category, set:string, collectorNumber:string) {
+        return {
+        ...category,
+        cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
+        }
+    }
+
+    // for adding or updating cards
+    function addfunction (category:category, card:{count:number,set:string,collector_number:string, art:string, oracleid:string}) {
+        return {
+            ...category,
+            cards:[...category.cards, card]
+        }
+    }
+
+    //generate card settings
+    function generatecard (count:number,set:string,collector_number:string, art:string, oracleid:string){
+        return {
+            count: count,
+            set: set,
+            collector_number: collector_number,
+            art: art,
+            oracleid: oracleid
+        }
+    }
 
     async function importDecks() {
         const response = await fetch (`http://localhost:3500/Decks`)
@@ -124,19 +144,14 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 ...currentdeck,
                 /*create a new deck array with all the old content in it pluss the new one,
                 this will then replace the old array and the content will re render*/
-                deck: currentdeck.deck.map((category) =>
-                    category.categoryName == "Main Deck"
-                    ?{...category,
-                        categories:[...category.categories!, newcategory]
-                    }: category
-                )
+                deck: [...currentdeck.deck, newcategory]
             })
         )
     }
 
-    async function addCard(categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string){
+    async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string){
         const addedCard = {
-            count: 1,
+            count: count,
             set: set,
             collector_number: collectorNumber,
             art: art,
@@ -217,8 +232,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             })
         )
     }
-    
-
 
     return (
         <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard, removeCard}}>
