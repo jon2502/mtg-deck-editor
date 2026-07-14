@@ -29,7 +29,7 @@ interface DeckContextType {
     importDecks: () => void;
     importDeck: (id:string) => void;
     addCategory:(categoryName: string) => void;
-    addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string) => void;
+    addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
     updateCard: (
         count:number,
         selectedCategory:number,
@@ -38,10 +38,7 @@ interface DeckContextType {
         selectedset:string,
         collectorNumber:string,
         selectedsetcollectorNumber:string, 
-        cardData:{
-         art:string;
-         oracleid:string
-    }) => void
+        ) => void
     removeCard:(categoryIndex:number, set:string, collectorNumber:string) => void
 }
 
@@ -90,22 +87,25 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     //generate card settings
-    function generatecard (count:number,set:string,collector_number:string, art:string, oracleid:string){
+    async function generatecard (count:number,set:string,collector_number:string){
+        var newData = await searchCard(set, collector_number)
         return {
             count: count,
             set: set,
             collector_number: collector_number,
-            art: art,
-            oracleid: oracleid
+            art: newData.art,
+            oracleid: newData.oracleid
         }
     }
 
+    //imports all decks
     async function importDecks() {
         const response = await fetch (`http://localhost:3500/Decks`)
         const decks = await response.json()
         setDecks(decks)
     }
 
+    //imports a single deck
     async function importDeck(id: string) {
         //fetch deck
         const response = await fetch (`http://localhost:3500/Deck/${id}`)
@@ -135,7 +135,11 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     async function addCategory(newCategoryName: string) {
         const newcategory = {
             categoryName: newCategoryName,
-            cards: []
+            cards: [],
+            permissions: {
+              canRename: true,
+              canDelete: true
+            }
         }
 
         setDeckinfo(
@@ -149,14 +153,9 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
     }
 
-    async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string, art:string, oracleid:string){
-        const addedCard = {
-            count: count,
-            set: set,
-            collector_number: collectorNumber,
-            art: art,
-            oracleid: oracleid
-        }
+    async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string){
+        
+        const addedCard = await generatecard(count, set, collectorNumber)
         
         setDeckinfo(
             currentdeck => ({
@@ -164,9 +163,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 deck: currentdeck.deck.map((category, index)=>
                     index == categoryIndex
                     //if true set up and object for the category with the cards inside
-                    ? {...category,
-                        cards:[...category.cards, addedCard]
-                    }
+                    ? addfunction(category, addedCard)
                     //else keep the cards of the category unchanged 
                     : category
                 )
@@ -181,16 +178,10 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         set:string,
         selectedset:string,
         collectorNumber:string,
-        selectedsetcollectorNumber:string,
-        cardData:{art:string, oracleid:string}){
+        selectedsetcollectorNumber:string
+        ){
 
-         const updatedCardInfo = {
-            count: count,
-            set: selectedset,
-            collector_number: selectedsetcollectorNumber,
-            art: cardData.art,
-            oracleid: cardData.oracleid
-        }
+        const updatedCardInfo = await generatecard(count, selectedset, selectedsetcollectorNumber)
 
         setDeckinfo(
             currentdeck => ({
@@ -198,13 +189,10 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 deck: currentdeck.deck.map((category, index)=>
                     index == selectedCategory && selectedCategory != orginalCategory
                     //if true set up and object for the category with the cards inside
-                    ? {...category,
-                        cards:[...category.cards, updatedCardInfo]
-                    }
+                    ? addfunction(category, updatedCardInfo)
                     : index == orginalCategory && selectedCategory != orginalCategory
-                    ? {...category,
-                        cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
-                    }:{
+                    ? removefunction(category, set, collectorNumber)
+                    :{
                         ...category,
                         cards: category.cards.map((card)=>
                             card.set == set && card.collector_number == collectorNumber
@@ -223,9 +211,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 deck: currentdeck.deck.map((category, index)=>
                     index == categoryIndex
                     //if true set up and object for the category with the cards inside
-                    ? {...category,
-                        cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
-                    }
+                    ? removefunction(category, set, collectorNumber)
                     //else keep the cards of the category unchanged 
                     : category
                 )

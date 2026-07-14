@@ -48,8 +48,7 @@ function overlay() {
     console.log(formData)
     const categoryIndex = Number(formData.get("categoryname") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
-    const cardData = await searchCard(set,collectorNumber)
-    addCard(1, categoryIndex, set, collectorNumber, cardData.art, cardData.oracleid)
+    addCard(1, categoryIndex, set, collectorNumber)
     shutdown()
   }
 
@@ -59,9 +58,7 @@ function overlay() {
     const [set, collectorNumber] = (formData.get("originalSelectedPrinting") as string).split("/")
     const selectedCategory = Number(formData.get("selectCategory") as string)
     const orginalCategory = Number(formData.get("orginalCategory") as string)
-    const cardData = await searchCard(selectedset,selectedsetcollectorNumber)
-    console.log(cardData)
-    updateCard(1, selectedCategory, orginalCategory, set, selectedset, collectorNumber, selectedsetcollectorNumber, cardData)
+    updateCard(1, selectedCategory, orginalCategory, set, selectedset, collectorNumber, selectedsetcollectorNumber)
     shutdown()
   }
 
