@@ -9,7 +9,6 @@ export const searchCard = async (set: string, collector_number:string) => {
 
     const result = await res.json();
     if('card_faces' in result){
-        console.log("double faced")
         const data = {
             art:result.card_faces[0].image_uris.normal,
             oracleid:result.oracle_id

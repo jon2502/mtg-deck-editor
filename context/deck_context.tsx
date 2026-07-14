@@ -13,6 +13,10 @@ interface card {
 interface category {
     categoryName: string;
     cards: Array<card>
+    permissions: {
+    canRename: boolean,
+    canDelete: boolean
+  }
 }
 
 interface Deckinfo {
@@ -21,6 +25,7 @@ interface Deckinfo {
     color: string;
     _id: string;
     deck: Array<category>;
+    
 }
 
 interface DeckContextType {
@@ -50,7 +55,7 @@ const deafultDeckContextType: DeckContextType = {
         color: "",
         _id: "",
         deck: [
-            {categoryName:"", cards:[]}
+            {categoryName:"", cards:[], permissions:{canRename:false, canDelete:false}}
         ]
     },
     importDecks:() => {},
@@ -110,7 +115,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         //fetch deck
         const response = await fetch (`http://localhost:3500/Deck/${id}`)
         const deck = await response.json()
-        console.log(deck)
         //wait for all categories to be done
         const deckExtraInfo = await Promise.all(
             // loop through each category in the deck

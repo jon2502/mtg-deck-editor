@@ -18,8 +18,6 @@ function overlay() {
   async function formAction(formData: FormData){
     const name = formData.get("name") as string
     const format = formData.get("format") as string
-    console.log(name)
-    console.log(format)
     fetch("http://localhost:3500/Create",{
           method: 'POST',
           headers: {
@@ -32,7 +30,6 @@ function overlay() {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data)
       router.push(`/Decks/Edit/${data._id}`)
     })
     shutdown()
@@ -45,7 +42,6 @@ function overlay() {
   }
   
   async function card(formData: FormData) {
-    console.log(formData)
     const categoryIndex = Number(formData.get("categoryname") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
     addCard(1, categoryIndex, set, collectorNumber)
@@ -53,7 +49,6 @@ function overlay() {
   }
 
   async function update(formData: FormData,) {
-    console.log(formData)
     const [selectedset, selectedsetcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const [set, collectorNumber] = (formData.get("originalSelectedPrinting") as string).split("/")
     const selectedCategory = Number(formData.get("selectCategory") as string)
