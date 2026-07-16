@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 import Image from 'next/image';
 import { useOverlayContext } from '@/context/overlay_context';
+import CardImage from "@/components/cardImage"
+
 
 type ImageUris = {
   small: string;
@@ -81,6 +83,7 @@ const AllCards = () => {
 
   async function fetchNewPage() {
     const res = await searchCards({ name, format, color, page })
+    console.log(res.data)
     setCards(res.data)
   }
 
@@ -111,18 +114,11 @@ const AllCards = () => {
       <button onClick={() => setPage(page + 1)}>{">"}</button>
       <button onClick={() => setPage(totalpages)}>{">>"}</button>
     </div>
-    <section>
+    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-[12px]'>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
           {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
           <div key={card.oracle_id}>
-            <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
-              <Image
-                src={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal}
-                alt="test"
-                fill
-                unoptimized
-              />
-            </div>
+            <CardImage art={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal} alttext={card.oracle_id}/>
             <div>
               <p>{card.name}</p>
               {card.card_faces ? (

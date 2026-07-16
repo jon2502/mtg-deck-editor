@@ -1,5 +1,6 @@
 
 export const searchCard = async (set: string, collector_number:string) => {
+    //gets a specific version of a card
     var url = `https://api.scryfall.com/cards/${set}/${collector_number}`;
 
     const res = await fetch(url);
@@ -8,18 +9,11 @@ export const searchCard = async (set: string, collector_number:string) => {
     }
 
     const result = await res.json();
-    if('card_faces' in result){
-        const data = {
-            art:result.card_faces[0].image_uris.normal,
-            oracleid:result.oracle_id
-        }
-        return data
-    }else{
-        const data = {
-            art:result.image_uris.normal,
-            oracleid:result.oracle_id
-        }
-        return data
+
+    //retun values we need in the application.
+    return{
+        art:result.image_uris.normal ?? result.card_faces[0].image_uris.normal,
+        oracleid:result.oracle_id
     }
     
     

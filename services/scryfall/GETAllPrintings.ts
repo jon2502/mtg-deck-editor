@@ -1,5 +1,6 @@
 
 export const searchPrintings = async (oracle_id: string) => {
+    //get all printings of one specific card
     var url = `https://api.scryfall.com/cards/search?order=released&q=oracleid:${oracle_id}&unique=prints`;
     const res = await fetch(url);
 

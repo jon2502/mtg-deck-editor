@@ -2,10 +2,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image';
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 import {searchCard} from "@/services/scryfall/GETCard"
+import CardImage from "@/components/cardImage"
 
 interface DeckProps {
   id: string;
@@ -46,18 +46,32 @@ const Deck = ({id}:DeckProps) => {
     })
     }
 
+    function createbuttons(oracleid:string, set:string, collector_number:string, index:number){
+        return <div>
+                    <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:oracleid, set:set, collector_number:collector_number, index:index})}>
+                        Update
+                    </button>
+                    <button onClick={()=>toggleOverlaySettings("Remove-Card", {set:set, collector_number:collector_number, index:index})}>
+                        Remove
+                    </button>
+                </div>
+    }
+
     useEffect(() =>{
         importDeck(id)        
     },[])
 
     useEffect(() =>{
-        var canedit = deckinfo.deck
-        .map((category, index)=> ({...category, index}))
-        .filter(category => category.permissions.canDelete === true && category.permissions.canRename === true)
+        var canedit: category[] = []
+        var cannotedit: category[]  = []
+        deckinfo.deck.map((category, index)=> {
+            if(category.permissions.canDelete === true && category.permissions.canRename === true){
+                canedit.push({...category, index})
+            } else if(category.permissions.canDelete === false && category.permissions.canRename === false){
+                cannotedit.push({...category, index})
+            }
+        })
         setEditable(canedit)
-        var cannotedit = deckinfo.deck
-        .map((category, index)=> ({...category, index}))
-        .filter(category => category.permissions.canDelete === false && category.permissions.canRename === false)
         setNonEditable(cannotedit)
     },[deckinfo])
 
@@ -73,46 +87,23 @@ const Deck = ({id}:DeckProps) => {
                     <p>{catagory.categoryName}</p>
                     {catagory.cards.map((card)=>(
                         <div key={card.collector_number}>
-                            <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
-                                <Image
-                                    src={card.art}
-                                    alt={card.set+"/"+card.collector_number}
-                                    fill
-                                    unoptimized
-                                />
-                            </div>
-                            <div>
-                                <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:catagory.index})}>
-                                    Update
-                                </button>
-                                <button onClick={()=>toggleOverlaySettings("Remove-Card", {set:card.set, collector_number:card.collector_number, index:catagory.index})}>
-                                    Remove
-                                </button>
-                            </div>
+                            <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
+                             {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
                         </div>
                     ))}
                     {catagory.categoryName === "Main Deck" &&
                         editable.map((catagory: category)=>(
                             <div key={catagory.categoryName} className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
                             <p>{catagory.categoryName}</p>
+                                <div>
+                                    <button>&#8593;</button>
+                                    <button>&#8595;</button>
+                                    <button>delete</button>
+                                </div>
                             {catagory.cards.map((card)=>(
                                 <div key={card.collector_number}>
-                                    <div className="relative w-full aspect-[5/7] bg-muted overflow-hidden">
-                                        <Image
-                                            src={card.art}
-                                            alt={card.set+"/"+card.collector_number}
-                                            fill
-                                            unoptimized
-                                        />
-                                    </div>
-                                    <div>
-                                        <button onClick={()=>toggleOverlaySettings("Update-Card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:catagory.index})}>
-                                            Update
-                                        </button>
-                                        <button onClick={()=>toggleOverlaySettings("Remove-Card", {set:card.set, collector_number:card.collector_number, index:catagory.index})}>
-                                            Remove
-                                        </button>
-                                    </div>
+                                    <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
+                                    {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
                                 </div>
                             ))}
                         </div>

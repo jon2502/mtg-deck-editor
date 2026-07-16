@@ -73,7 +73,7 @@ export const DeckContext = createContext<DeckContextType>(deafultDeckContextType
 export const Decksetting = ({children}: {children: React.ReactNode}) => {
     const [deckinfo, setDeckinfo] = useState<Deckinfo>(deafultDeckContextType.deckinfo)
     const [decklist, setDecks] = useState([])
-    const [saved, SetSaved]= useState(false)
+    const [saved, SetSaved]= useState(true)
 
     // for removing cards
     function removefunction(category:category, set:string, collectorNumber:string) {
@@ -192,7 +192,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 ...currentdeck,
                 deck: currentdeck.deck.map((category, index)=>
                     index == selectedCategory && selectedCategory != orginalCategory
-                    //if true set up and object for the category with the cards inside
                     ? addfunction(category, updatedCardInfo)
                     : index == orginalCategory && selectedCategory != orginalCategory
                     ? removefunction(category, set, collectorNumber)

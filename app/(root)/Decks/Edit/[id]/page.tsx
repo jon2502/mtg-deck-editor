@@ -18,7 +18,7 @@ const page =  () => {
 
   return (
     <section className='flex justify-center items-center gap-[2.5%]'>
-      <div className='w-[45%] h-[75vh] pr-[12px] overflow-auto overflow-x-hidden'>
+      <div className='w-[45%] h-[75vh]'>
         <AllCards/>
       </div>
       <div className='w-[45%] h-[75vh] pr-[12px] overflow-auto overflow-x-hidden'>
