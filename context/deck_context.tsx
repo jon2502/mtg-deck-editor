@@ -85,9 +85,20 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     // for adding or updating cards
     function addfunction (category:category, card:{count:number,set:string,collector_number:string, art:string, oracleid:string}) {
+        
+        let exists = category.cards.some((cardInDeck)=>
+            card.set == cardInDeck.set && card.collector_number == cardInDeck.collector_number
+        )
+
         return {
             ...category,
-            cards:[...category.cards, card]
+            cards: exists
+            ? category.cards.map((cardInDeck)=>
+                card.set == cardInDeck.set && card.collector_number == cardInDeck.collector_number
+                ? {...cardInDeck, count:cardInDeck.count + card.count }
+                : cardInDeck
+            )
+            :[...category.cards, card]
         }
     }
 
@@ -158,7 +169,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string){
-        
+    
         const addedCard = await generatecard(count, set, collectorNumber)
         
         setDeckinfo(

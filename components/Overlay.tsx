@@ -42,7 +42,7 @@ function overlay() {
   }
   
   async function card(formData: FormData) {
-    const categoryIndex = Number(formData.get("categoryname") as string)
+    const categoryIndex = Number(formData.get("selectCategory") as string)
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
     addCard(1, categoryIndex, set, collectorNumber)
     shutdown()
@@ -86,7 +86,7 @@ function overlay() {
   switch(value){
       case "save":
         return <div>
-        <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        <div className='overlay-display'>
           <div>
             <h1>progess not saved. Are you sure you want to continue? if you do all progress will be lost</h1>
             <button>Yes</button>
@@ -95,7 +95,7 @@ function overlay() {
         </div>
         </div>
       case "create":
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <div>
               <form action={formAction}>
               <input type="text" id="name" name="name" required/>
@@ -116,7 +116,7 @@ function overlay() {
           </div>
         </div>
       case "Add-Category":
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <h2>Create new category</h2>
           <form action={Category}>
             <input type="text" name="categoryname" id="categoryname" />
@@ -125,7 +125,7 @@ function overlay() {
           </form>
         </div>
       case "Add-Card":
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <h2>Add Card</h2>
           <form action={card}>
             <select name="selectCategory" id="selectCategory" required>
@@ -150,7 +150,7 @@ function overlay() {
       case "Update-Card":
         const orginalCategory = extra.index;
         const originalValue = `${extra.set}/${extra.collector_number}`;
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <h2>Add Card</h2>
           <form action={update}>
             <select name="selectCategory" id="selectCategory" value={selectedCategory} onChange={(e) => setselectedCategory(Number(e.target.value))} required>
@@ -176,7 +176,7 @@ function overlay() {
           </form>
         </div>
       case "Remove-Card":
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <div>
             <h1>Are you sure that you want to remove this from your deck deck</h1>
             <button onClick={()=>{removeCard(extra.index!, extra.set!, extra.collector_number!); shutdown();}}>Yes</button>
@@ -184,7 +184,7 @@ function overlay() {
           </div>
         </div>
       case "delete":
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <div>
             <h1>Are you sure that you want to delete this deck</h1>
             <button onClick={()=>DeleteFunction(extra.deckid!)}>Yes</button>
@@ -192,7 +192,7 @@ function overlay() {
           </div>
         </div>
       default:
-        return <div className='fixed bg-black/25 w-[100vw] h-[100vh] top-[0%] flex flex-col items-center content-center'>
+        return <div className='overlay-display'>
           <p>something went wrog</p>
         </div>
     }

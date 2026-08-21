@@ -75,45 +75,55 @@ const Deck = ({id}:DeckProps) => {
         setNonEditable(cannotedit)
     },[deckinfo])
 
+    console.log(deckinfo)
+
     return (
-        <section>
-            <div>
-                <h1>{deckinfo?.name}</h1>
-                <button onClick={()=>toggleOverlaySettings("Add-Category")}>Add Category</button>
-            </div>
-            <div>
-                {nonEditable.map((catagory: category)=>(
-                    <div key={catagory.categoryName} className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-                    <p>{catagory.categoryName}</p>
-                    {catagory.cards.map((card)=>(
-                        <div key={card.collector_number}>
-                            <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
-                             {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
-                        </div>
-                    ))}
-                    {catagory.categoryName === "Main Deck" &&
-                        editable.map((catagory: category)=>(
-                            <div key={catagory.categoryName} className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-                            <p>{catagory.categoryName}</p>
-                                <div>
-                                    <button>&#8593;</button>
-                                    <button>&#8595;</button>
-                                    <button>delete</button>
-                                </div>
-                            {catagory.cards.map((card)=>(
-                                <div key={card.collector_number}>
-                                    <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
-                                    {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
-                                </div>
-                            ))}
-                        </div>
-                        ))
-                    }
-                </div>
+    <>
+    <div>
+        <h1>{deckinfo?.name}</h1>
+        <button onClick={()=>toggleOverlaySettings("Add-Category")}>Add Category</button>
+    </div>
+    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
+        <div>
+            {nonEditable.map((catagory: category)=>(
+                <div key={catagory.categoryName} className='flex flex-col'>
+                <p>{catagory.categoryName}</p>
+                <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
+                {catagory.cards.map((card)=>(
+                    <div key={card.set+"/"+card.collector_number} >
+                        <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
+                        {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
+                    </div>
                 ))}
+                </div>
+                {catagory.categoryName === "Main Deck" &&
+                    editable.map((catagory: category)=>(
+                        <div key={catagory.categoryName} className='flex flex-col ml-3.5'>
+                        <div className='flex flex-row'>
+                            <p>{catagory.categoryName}</p>
+                            <div>
+                                <button>&#8593;</button>
+                                <button>&#8595;</button>
+                                <button>delete</button>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
+                        {catagory.cards.map((card)=>(
+                            <div key={card.set+"/"+card.collector_number}>
+                                <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
+                                {createbuttons(card.oracleid, card.set, card.collector_number, catagory.index)}
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+                    ))
+                }
             </div>
-            <button onClick={save}>save</button>
-        </section>
+            ))}
+        </div>
+    </section>
+    <button onClick={save}>save</button>
+    </>
     )
 }
 

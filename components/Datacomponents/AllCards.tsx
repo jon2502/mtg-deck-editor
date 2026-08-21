@@ -100,7 +100,7 @@ const AllCards = () => {
   },[page])
 
   return(
-  <section className=''>
+  <>
     <div>
       <button onClick={() => setPage(1)}>{"<<"}</button>
       <button onClick={() => setPage(page - 1)}>{"<"}</button>
@@ -114,7 +114,7 @@ const AllCards = () => {
       <button onClick={() => setPage(page + 1)}>{">"}</button>
       <button onClick={() => setPage(totalpages)}>{">>"}</button>
     </div>
-    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-[12px]'>
+    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
           {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
           <div key={card.oracle_id}>
@@ -145,7 +145,7 @@ const AllCards = () => {
         ))}
       </div>
     </section>
-  </section>
+  </>
   )
 }
 
