@@ -1,44 +1,20 @@
 'use client'
 import { createContext, useContext, useState } from 'react'
+import {Deckinfo, category} from "@/global"
 import {searchCard} from "@/services/scryfall/GETCard"
 
-interface card {
-    count: number;
-    set:string; 
-    collector_number:string;
-    art:string;
-    oracleid:string;
-}
-
-interface category {
-    categoryName: string;
-    cards: Array<card>
-    permissions: {
-    canRename: boolean,
-    canDelete: boolean
-  }
-}
-
-interface Deckinfo {
-    name: string;
-    format: string;
-    color: string;
-    _id: string;
-    deck: Array<category>;
-    
-}
 
 interface DeckContextType {
     decklist: Deckinfo[];
     deckinfo: Deckinfo;
     importDecks: () => void;
     importDeck: (id:string) => void;
-    addCategory:(categoryName: string) => void;
+    addcategory:(categoryName: string) => void;
     addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
     updateCard: (
         count:number,
-        selectedCategory:number,
-        orginalCategory:number,
+        selectedcategory:number,
+        orginalcategory:number,
         set:string,
         selectedset:string,
         collectorNumber:string,
@@ -60,7 +36,7 @@ const deafultDeckContextType: DeckContextType = {
     },
     importDecks:() => {},
     importDeck:() => {},
-    addCategory:() => {},
+    addcategory:() => {},
     addCard:() => {},
     updateCard:() => {},
     removeCard:() => {}
@@ -147,9 +123,9 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         setDeckinfo({...deck, deck:deckExtraInfo})
     }
 
-    async function addCategory(newCategoryName: string) {
+    async function addcategory(newcategoryName: string) {
         const newcategory = {
-            categoryName: newCategoryName,
+            categoryName: newcategoryName,
             cards: [],
             permissions: {
               canRename: true,
@@ -188,8 +164,8 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     async function updateCard(
         count:number,
-        selectedCategory:number,
-        orginalCategory:number,
+        selectedcategory:number,
+        orginalcategory:number,
         set:string,
         selectedset:string,
         collectorNumber:string,
@@ -202,9 +178,9 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             currentdeck => ({
                 ...currentdeck,
                 deck: currentdeck.deck.map((category, index)=>
-                    index == selectedCategory && selectedCategory != orginalCategory
+                    index == selectedcategory && selectedcategory != orginalcategory
                     ? addfunction(category, updatedCardInfo)
-                    : index == orginalCategory && selectedCategory != orginalCategory
+                    : index == orginalcategory && selectedcategory != orginalcategory
                     ? removefunction(category, set, collectorNumber)
                     :{
                         ...category,
@@ -234,7 +210,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard, removeCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addcategory, addCard, updateCard, removeCard}}>
             {children}
         </DeckContext.Provider>
     )

@@ -12,6 +12,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
+h1 {
+    font-size: 2.5rem;
+}
+
+h5 {
+  font-size: 1.2tarem;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ededed;

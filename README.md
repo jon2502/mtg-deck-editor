@@ -14,6 +14,39 @@ a custom made MTG deck editor
 https://github.com/jon2502/MTG-deck-editor-backend
 
 
+## Project roadmap
+
+### Phase 1 - complete the foundation
+
+- [x] Create and delete decks
+- [x] Create categories
+- [x] Add cards to decks
+- [x] Remove cards from deck
+- [x] Move cards between categories
+- [ ] Finish styling
+- [ ] Improve search functionality
+- [ ] Card filtering
+
+### Phase 2 - Advanced deck features
+
+- [ ] Add custom cards
+- [ ] Add custom alternate art
+- [ ] Deck statistics
+- [ ] card pricing
+- [ ] Deck validation
+- [ ] Card filtering
+
+### Phase 3 - Advanced deck managment
+
+- [ ] Favorites
+- [ ] Version control
+- [ ] Copy/Fork decks
+
+### Phase 4 Import and export featurs
+
+- [ ] Import/Export decks
+- [ ] Custom card backs
+
 ## Getting Started
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).

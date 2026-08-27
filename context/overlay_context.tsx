@@ -34,7 +34,7 @@ const OverlayContext = createContext<OverlayContextType>(
   defaultOverlayContext
 );
 
-const settingOptionsAllowed = ["save", "create","Add-Category", "Add-Card", "Update-Card", "Remove-Card", "delete"]
+const settingOptionsAllowed = ["save", "create","add-category", "add-card", "update-card", "remove-card", "delete"]
 
 export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     const [setting, setSetting] = useState(false)

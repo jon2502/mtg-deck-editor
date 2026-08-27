@@ -1,0 +1,26 @@
+
+export interface Deckinfo {
+    name: string;
+    format: string;
+    color: string;
+    _id: string;
+    deck: Array<category>;
+}
+
+export interface category {
+    categoryName: string;
+    cards: Array<card>
+    permissions: {
+    canRename: boolean,
+    canDelete: boolean
+  },
+  index?: number
+}
+
+export interface card {
+    count: number;
+    set:string; 
+    collector_number:string;
+    art:string;
+    oracleid:string;
+}

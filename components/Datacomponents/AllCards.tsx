@@ -83,7 +83,6 @@ const AllCards = () => {
 
   async function fetchNewPage() {
     const res = await searchCards({ name, format, color, page })
-    console.log(res.data)
     setCards(res.data)
   }
 
@@ -139,7 +138,7 @@ const AllCards = () => {
                 </div>
                 
               )}
-              <button onClick={() => toggleOverlaySettings("Add-Card",{oracleid:card.oracle_id})}>+</button>
+              <button onClick={() => toggleOverlaySettings("add-card",{oracleid:card.oracle_id})}>+</button>
             </div>
           </div>
         ))}
