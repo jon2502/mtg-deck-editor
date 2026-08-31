@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from 'react'
 
 interface ExtraInfomation {
     deckid?: string,
+    parentId?: string,
     oracleid?: string,
     set?: string,
     collector_number?: string,
@@ -22,6 +23,7 @@ const defaultOverlayContext: OverlayContextType = {
   value: "",
   extra: {
     deckid: "",
+    parentId: "Main Deck",
     oracleid: "",
     set: "",
     collector_number: "",
@@ -42,6 +44,7 @@ export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     const [extra, SetExtra]=useState({})
 
     const toggleOverlaySettings = (val:string, extra?:ExtraInfomation) => {
+        console.log(extra)
        const check = settingOptionsAllowed.includes(val)
        if (check === true) {
         setValue(val)

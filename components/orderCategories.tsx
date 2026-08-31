@@ -1,25 +1,34 @@
 import {Deckinfo, category} from "@/global"
 
 function orderCategories(deckinfo:Deckinfo) {
-    var orderedCategories: category[] = []
-    deckinfo.deck.map((category, index)=> {
-        if(category.permissions.canDelete === false && category.permissions.canRename === false && ["Main Deck", "Commander", "Commanders"].includes(category.categoryName)){
-            orderedCategories.push({...category, index})  
-        }
+    var mainCategories: category[] = []
+    var mainDeckCategories: category[] = []
+    var sideboardCategories: category[] = []
+    var maybeboardCategories: category[] = []
 
-    })
 
     deckinfo.deck.map((category, index)=> {
-        if(category.permissions.canDelete === true && category.permissions.canRename === true){
-            orderedCategories.push({...category, index})
+        if(category.type == "main"){
+            mainCategories.push({...category, index})
         }
+        if(category.parentId == "Main Deck"){
+            mainDeckCategories.push({...category, index})  
+        }
+        if(category.parentId == "Sideboard"){
+            sideboardCategories.push({...category, index})  
+        }
+        if(category.parentId == "Maybeboard"){
+            maybeboardCategories.push({...category, index})  
+        }
+  
     })
-    deckinfo.deck.map((category, index)=> {
-        if(category.permissions.canDelete === false && category.permissions.canRename === false && !["Main Deck", "Commander", "Commanders"].includes(category.categoryName)){
-            orderedCategories.push({...category, index})
+    
+    var orderedCategories = mainCategories.sort((a,b)=> 
+        a.order - b.order
+    )
 
-        }
-    })
+    
+
     return orderedCategories
 }
 

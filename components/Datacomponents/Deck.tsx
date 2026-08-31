@@ -55,6 +55,7 @@ const Deck = ({id}:DeckProps) => {
 
     useEffect(() =>{
         const orderedCategories = orderCategories(deckinfo)
+        console.log(orderedCategories)
         setOrderedCategories(orderedCategories)
     },[deckinfo])
 
@@ -62,16 +63,20 @@ const Deck = ({id}:DeckProps) => {
     <>
     <div>
         <h1>{deckinfo?.name}</h1>
-        <button onClick={()=>toggleOverlaySettings("add-category")}>Add category</button>
     </div>
     <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div>
             {orderedCategories.map((category: category)=>(
-                <div key={category.categoryName} className={`flex flex-col ${category.permissions.canDelete === true && category.permissions.canRename === true && 'ml-3.5'}`}>
-                    {category.permissions.canDelete === false && category.permissions.canRename === false &&
-                        <h5>{category.categoryName}</h5>
+                <div key={category.categoryName} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
+                    {category.type == "main" &&
+                            <>
+                            <h5>{category.categoryName}</h5>
+                            {category.categoryName != "Commander" &&
+                                <button onClick={()=>toggleOverlaySettings("add-category", {parentId:category.categoryName})}>Add category</button>
+                            }
+                        </>
                     }
-                    {category.permissions.canDelete === true && category.permissions.canRename === true &&
+                    {category.type == "custom" &&
                         <div className='flex flex-row'>
                                     <h5>{category.categoryName}</h5>
                                     <div>

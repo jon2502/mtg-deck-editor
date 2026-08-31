@@ -9,12 +9,11 @@ export interface Deckinfo {
 
 export interface category {
     categoryName: string;
-    cards: Array<card>
-    permissions: {
-    canRename: boolean,
-    canDelete: boolean
-  },
-  index?: number
+    cards: Array<card>;
+    type: string;
+    parentId?: string;
+    order: number;
+    index?: number;
 }
 
 export interface card {

@@ -9,7 +9,7 @@ interface DeckContextType {
     deckinfo: Deckinfo;
     importDecks: () => void;
     importDeck: (id:string) => void;
-    addcategory:(categoryName: string) => void;
+    addcategory:(categoryName: string, parentId: string) => void;
     addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
     updateCard: (
         count:number,
@@ -31,7 +31,7 @@ const deafultDeckContextType: DeckContextType = {
         color: "",
         _id: "",
         deck: [
-            {categoryName:"", cards:[], permissions:{canRename:false, canDelete:false}}
+            {categoryName:"", cards:[], type: "main", order: 0}
         ]
     },
     importDecks:() => {},
@@ -123,14 +123,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         setDeckinfo({...deck, deck:deckExtraInfo})
     }
 
-    async function addcategory(newcategoryName: string) {
+    async function addcategory(newcategoryName: string, parentId: string) {
         const newcategory = {
             categoryName: newcategoryName,
             cards: [],
-            permissions: {
-              canRename: true,
-              canDelete: true
-            }
+            type: "custom",
+            parentId: parentId,
+            order: 0
         }
 
         setDeckinfo(

@@ -38,7 +38,8 @@ function overlay() {
 
   async function gencategory(formData: FormData) {
     const categoryName = formData.get("categoryname") as string
-    addcategory(categoryName)
+    const parent = extra.parentId
+    addcategory(categoryName, parent)
     shutdown()
   }
   
@@ -51,9 +52,10 @@ function overlay() {
 
   async function update(formData: FormData,) {
     const [selectedset, selectedsetcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
-    const [set, collectorNumber] = (formData.get("originalSelectedPrinting") as string).split("/")
     const selectedcategory = Number(formData.get("selectcategory") as string)
-    const orginalcategory = Number(formData.get("orginalcategory") as string)
+    const orginalcategory = extra.index;
+    const set = extra.set
+    const collectorNumber = extra.collector_number
     updateCard(1, selectedcategory, orginalcategory, set, selectedset, collectorNumber, selectedsetcollectorNumber)
     shutdown()
   }
@@ -159,8 +161,6 @@ function overlay() {
           </form>
         </div>
       case "update-card":
-        const orginalcategory = extra.index;
-        const originalValue = `${extra.set}/${extra.collector_number}`;
         return <div className='overlay-display'>
           <h2>Add Card</h2>
           <form action={update}>
@@ -170,8 +170,6 @@ function overlay() {
             <select name="selectPrinting" id="selectPrinting" value={selectedCard} onChange={(e) => setselectedCard(e.target.value)} required>
               {createPrintingOptions()}
             </select>
-            <input type="hidden" name="originalSelectedPrinting" value={originalValue} />
-            <input type="hidden" name="orginalcategory" value={orginalcategory} />
             <button type='submit'>Create</button>
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>
