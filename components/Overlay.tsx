@@ -4,16 +4,14 @@ import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 import { searchPrintings } from '@/services/scryfall/GETAllPrintings'
-import orderCategories from '@/components/orderCategories'
 import { category } from '@/global';
-import { decodeAction } from 'next/dist/server/app-render/entry-base';
 
 function overlay() {
   const [printings, setPrintings] = useState([])
   const [selectedCard, setselectedCard] = useState("");
   const [selectedcategory, setselectedcategory] = useState(0)
   const {setting, value, extra, shutdown} = useOverlayContext()
-  const {deckinfo, importDecks, addcategory, addCard, updateCard, removeCard} = useDeckContext()
+  const {deckinfo, importDecks, addCategory, addCard, updateCard, removeCard} = useDeckContext()
   const router = useRouter()
 
   async function formAction(formData: FormData){
@@ -38,8 +36,8 @@ function overlay() {
 
   async function gencategory(formData: FormData) {
     const categoryName = formData.get("categoryname") as string
-    const parent = extra.parentId
-    addcategory(categoryName, parent)
+    const parent = extra.parentId!
+    addCategory(categoryName, parent)
     shutdown()
   }
   
@@ -53,9 +51,9 @@ function overlay() {
   async function update(formData: FormData,) {
     const [selectedset, selectedsetcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const selectedcategory = Number(formData.get("selectcategory") as string)
-    const orginalcategory = extra.index;
-    const set = extra.set
-    const collectorNumber = extra.collector_number
+    const orginalcategory = extra.index!;
+    const set = extra.set!
+    const collectorNumber = extra.collector_number!
     updateCard(1, selectedcategory, orginalcategory, set, selectedset, collectorNumber, selectedsetcollectorNumber)
     shutdown()
   }
@@ -70,11 +68,9 @@ function overlay() {
     shutdown()
     importDecks()
   }
-
   function createCategoryOptions() {
-    var orderedCategories = orderCategories(deckinfo)
-    return orderedCategories.map((category:category) => (
-        <option key={category.index} value={category.index}>{category.categoryName}</option>
+    return deckinfo.deck.map((category:category, index) => (
+        <option key={index} value={index}>{category.categoryName}</option>
       ))
   }
 
@@ -92,7 +88,6 @@ function overlay() {
   useEffect(() => {
      switch(value){
       case "update-card":
-        console.log(value)
         setselectedCard(`${extra.set}/${extra.collector_number}`);
         setselectedcategory(extra.index!)
       case "add-card":

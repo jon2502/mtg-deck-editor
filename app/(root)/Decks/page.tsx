@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
 

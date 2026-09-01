@@ -21,7 +21,7 @@ export const searchCards = async (params: SearchParams) => {
         .map(filter => filter.value)
         .filter(Boolean) // Remove empty strings
         .join(' ');
-    
+        
     //insert filterd content into url and use encodeURIComponent to encode character of the url
     //get all cards that matches search query
     var url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(queryString)}${page ? `&page=${page}` : ''}`;

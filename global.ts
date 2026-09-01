@@ -12,8 +12,6 @@ export interface category {
     cards: Array<card>;
     type: string;
     parentId?: string;
-    order: number;
-    index?: number;
 }
 
 export interface card {

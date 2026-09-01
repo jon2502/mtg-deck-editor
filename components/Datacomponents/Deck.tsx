@@ -1,12 +1,9 @@
 "use client";
-import React from 'react'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from "@/context/deck_context"
-import orderCategories from "@/components/orderCategories"
 import {category} from "@/global"
-import {searchCard} from "@/services/scryfall/GETCard"
 import CardImage from "@/components/cardImage"
 
 interface DeckProps {
@@ -16,8 +13,6 @@ interface DeckProps {
 const Deck = ({id}:DeckProps) => {
     const {toggleOverlaySettings} = useOverlayContext()
     const {deckinfo, importDeck} = useDeckContext()
-    const [editable, setEditable] = useState<category[]>([])
-    const [orderedCategories, setOrderedCategories] = useState<category[]>([])
     const router = useRouter()
 
     async function save() {
@@ -30,17 +25,17 @@ const Deck = ({id}:DeckProps) => {
     })
     }
 
-    function createCards(category:category){
+    function createCards(category:category, categoryindex:number){
         return  <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
                     {category.cards.map((card)=>(
                         <div key={card.set+"/"+card.collector_number}>
                             <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
                             <p>{card.count}</p>
                             <div>
-                                <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:category.index})}>
+                                <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:categoryindex})}>
                                     Update
                                 </button>
-                                <button onClick={()=>toggleOverlaySettings("remove-card", {set:card.set, collector_number:card.collector_number, index:category.index})}>
+                                <button onClick={()=>toggleOverlaySettings("remove-card", {set:card.set, collector_number:card.collector_number, index:categoryindex})}>
                                     Remove
                                 </button>
                             </div>
@@ -53,12 +48,6 @@ const Deck = ({id}:DeckProps) => {
         importDeck(id)        
     },[])
 
-    useEffect(() =>{
-        const orderedCategories = orderCategories(deckinfo)
-        console.log(orderedCategories)
-        setOrderedCategories(orderedCategories)
-    },[deckinfo])
-
     return (
     <>
     <div>
@@ -66,7 +55,7 @@ const Deck = ({id}:DeckProps) => {
     </div>
     <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div>
-            {orderedCategories.map((category: category)=>(
+            {deckinfo.deck.map((category: category, index:number)=>(
                 <div key={category.categoryName} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
                     {category.type == "main" &&
                             <>
@@ -78,20 +67,25 @@ const Deck = ({id}:DeckProps) => {
                     }
                     {category.type == "custom" &&
                         <div className='flex flex-row'>
-                                    <h5>{category.categoryName}</h5>
-                                    <div>
+                                <h5>{category.categoryName}</h5>
+                                <div>
+                                    {deckinfo.deck[index-1].parentId != null &&
                                         <button>&#8593;</button>
+                                    }
+                                    {deckinfo.deck[index+1].parentId != null &&
                                         <button>&#8595;</button>
-                                        <button>delete</button>
-                                    </div>
+                                    }
+                                    <button>Delete</button>
+                                    <button>Rename</button>
+                                </div>
                         </div>
                     }
-                    {createCards(category)}
+                    {createCards(category, index)}
                 </div>
             ))}
         </div>
     </section>
-    <button onClick={save}>save</button>
+    <button onClick={save}>Save</button>
     </>
     )
 }

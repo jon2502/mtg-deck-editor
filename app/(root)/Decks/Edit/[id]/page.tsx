@@ -1,8 +1,6 @@
 'use client'
 import AllCards from '@/components/Datacomponents/AllCards'
-import {useState, useEffect} from 'react'
 import { useOverlayContext } from '@/context/overlay_context'
-import { useDeckContext } from "@/context/deck_context"
 import { useParams } from 'next/navigation'
 import Deck from '@/components/Datacomponents/Deck'
 

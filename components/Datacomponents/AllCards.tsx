@@ -1,8 +1,6 @@
 "use client";
-import React from 'react'
 import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
-import Image from 'next/image';
 import { useOverlayContext } from '@/context/overlay_context';
 import CardImage from "@/components/cardImage"
 
@@ -33,6 +31,7 @@ type  MultiFaceCard = {
 
 const AllCards = () => {
   const {toggleOverlaySettings} = useOverlayContext()
+
   //search parameters
   const [name, setName] = useState('')
   const [format, setFormat] = useState('commander')
@@ -61,7 +60,7 @@ const AllCards = () => {
       var end = btnamount
     }
     var from = end - btnamount
-    var values = []
+    var values :number[] = []
     for (var i = from; i < end; i++) {
       values.push(i);
     }

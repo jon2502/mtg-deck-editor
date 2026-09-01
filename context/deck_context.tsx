@@ -9,7 +9,7 @@ interface DeckContextType {
     deckinfo: Deckinfo;
     importDecks: () => void;
     importDeck: (id:string) => void;
-    addcategory:(categoryName: string, parentId: string) => void;
+    addCategory:(categoryName: string, parentId: string) => void;
     addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
     updateCard: (
         count:number,
@@ -31,12 +31,12 @@ const deafultDeckContextType: DeckContextType = {
         color: "",
         _id: "",
         deck: [
-            {categoryName:"", cards:[], type: "main", order: 0}
+            {categoryName:"", cards:[], type: "main",}
         ]
     },
     importDecks:() => {},
     importDeck:() => {},
-    addcategory:() => {},
+    addCategory:() => {},
     addCard:() => {},
     updateCard:() => {},
     removeCard:() => {}
@@ -53,6 +53,10 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     // for removing cards
     function removefunction(category:category, set:string, collectorNumber:string) {
+        console.log("remove")
+        console.log(category)
+        console.log(set)
+        console.log(collectorNumber)
         return {
         ...category,
         cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
@@ -123,7 +127,11 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         setDeckinfo({...deck, deck:deckExtraInfo})
     }
 
-    async function addcategory(newcategoryName: string, parentId: string) {
+    async function addCategory(newcategoryName: string, parentId: string) {
+        const calIndex = deckinfo.deck.findIndex(
+            category => category.categoryName === parentId
+        ) + 1
+
         const newcategory = {
             categoryName: newcategoryName,
             cards: [],
@@ -138,9 +146,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                 ...currentdeck,
                 /*create a new deck array with all the old content in it pluss the new one,
                 this will then replace the old array and the content will re render*/
-                deck: [...currentdeck.deck, newcategory]
+                deck: [...currentdeck.deck.toSpliced(calIndex, 0, newcategory)]
             })
         )
+    }
+
+    async function moveCategory() {
+        return null
     }
 
     async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string){
@@ -209,7 +221,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addcategory, addCard, updateCard, removeCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard, removeCard}}>
             {children}
         </DeckContext.Provider>
     )

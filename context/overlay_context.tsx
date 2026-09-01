@@ -44,7 +44,6 @@ export const Overlaysetting = ({children}: {children: React.ReactNode}) => {
     const [extra, SetExtra]=useState({})
 
     const toggleOverlaySettings = (val:string, extra?:ExtraInfomation) => {
-        console.log(extra)
        const check = settingOptionsAllowed.includes(val)
        if (check === true) {
         setValue(val)
