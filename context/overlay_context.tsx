@@ -7,6 +7,7 @@ interface ExtraInfomation {
     oracleid?: string,
     set?: string,
     collector_number?: string,
+    count?: number
     index?: number,
 }
 

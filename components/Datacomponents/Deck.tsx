@@ -12,7 +12,7 @@ interface DeckProps {
 
 const Deck = ({id}:DeckProps) => {
     const {toggleOverlaySettings} = useOverlayContext()
-    const {deckinfo, importDeck} = useDeckContext()
+    const {deckinfo, importDeck, deleteCategory} = useDeckContext()
     const router = useRouter()
 
     async function save() {
@@ -32,7 +32,7 @@ const Deck = ({id}:DeckProps) => {
                             <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
                             <p>{card.count}</p>
                             <div>
-                                <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, index:categoryindex})}>
+                                <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, count:card.count, index:categoryindex})}>
                                     Update
                                 </button>
                                 <button onClick={()=>toggleOverlaySettings("remove-card", {set:card.set, collector_number:card.collector_number, index:categoryindex})}>
@@ -56,11 +56,11 @@ const Deck = ({id}:DeckProps) => {
     <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div>
             {deckinfo.deck.map((category: category, index:number)=>(
-                <div key={category.categoryName} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
+                <div key={`${category.type == "custom" && category.parentId+"/"}${category.categoryName}`} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
                     {category.type == "main" &&
                             <>
                             <h5>{category.categoryName}</h5>
-                            {category.categoryName != "Commander" &&
+                            {category.categoryName != "Commander"  && category.categoryName != "Commanders"  &&
                                 <button onClick={()=>toggleOverlaySettings("add-category", {parentId:category.categoryName})}>Add category</button>
                             }
                         </>
@@ -75,7 +75,7 @@ const Deck = ({id}:DeckProps) => {
                                     {deckinfo.deck[index+1].parentId != null &&
                                         <button>&#8595;</button>
                                     }
-                                    <button>Delete</button>
+                                    <button onClick={()=>deleteCategory(index)}>Delete</button>
                                     <button>Rename</button>
                                 </div>
                         </div>

@@ -10,6 +10,7 @@ interface DeckContextType {
     importDecks: () => void;
     importDeck: (id:string) => void;
     addCategory:(categoryName: string, parentId: string) => void;
+    deleteCategory: (index:number) => void;
     addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
     updateCard: (
         count:number,
@@ -37,6 +38,7 @@ const deafultDeckContextType: DeckContextType = {
     importDecks:() => {},
     importDeck:() => {},
     addCategory:() => {},
+    deleteCategory:() => {},
     addCard:() => {},
     updateCard:() => {},
     removeCard:() => {}
@@ -53,10 +55,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     // for removing cards
     function removefunction(category:category, set:string, collectorNumber:string) {
-        console.log("remove")
-        console.log(category)
-        console.log(set)
-        console.log(collectorNumber)
         return {
         ...category,
         cards:[...category.cards.filter((card)=> `${card.set}${card.collector_number}` !== `${set}${collectorNumber}`)]
@@ -65,7 +63,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     // for adding or updating cards
     function addfunction (category:category, card:{count:number,set:string,collector_number:string, art:string, oracleid:string}) {
-        
         let exists = category.cards.some((cardInDeck)=>
             card.set == cardInDeck.set && card.collector_number == cardInDeck.collector_number
         )
@@ -127,6 +124,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         setDeckinfo({...deck, deck:deckExtraInfo})
     }
 
+    // Add new sub category to a main category
     async function addCategory(newcategoryName: string, parentId: string) {
         const calIndex = deckinfo.deck.findIndex(
             category => category.categoryName === parentId
@@ -137,7 +135,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
             cards: [],
             type: "custom",
             parentId: parentId,
-            order: 0
         }
 
         setDeckinfo(
@@ -153,6 +150,38 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     async function moveCategory() {
         return null
+    }
+
+    // delete a sub category and move its content to its parent main category
+    async function deleteCategory(index:number) {
+        const categoryContent = deckinfo.deck[index].cards
+        const categoryName = deckinfo.deck[index].categoryName
+        const parent = deckinfo.deck[index].parentId
+        const parentContent = deckinfo.deck.find((category)=> category.categoryName === parent && category.type === "main")
+
+        if(parentContent){
+            setDeckinfo(
+                currentdeck => ({
+                    ...currentdeck,
+                     deck: currentdeck.deck.filter((category)=> category.type === "main" || category.categoryName !== categoryName)
+                })
+            )
+            categoryContent.forEach(card => {
+                setDeckinfo(
+                    currentdeck => ({
+                        ...currentdeck,
+                        deck: currentdeck.deck.map((category, index)=>
+                            category.categoryName == parent && category.type == "main"
+                            //if true set up and object for the category with the cards inside
+                            ? addfunction(category, card)
+                            //else keep the cards of the category unchanged 
+                            : category
+                        )
+                    })
+                )
+                addfunction(parentContent, card)
+            });
+        }
     }
 
     async function addCard(count:number, categoryIndex:number, set:string, collectorNumber:string){
@@ -221,7 +250,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, addCard, updateCard, removeCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, deleteCategory, addCard, updateCard, removeCard}}>
             {children}
         </DeckContext.Provider>
     )

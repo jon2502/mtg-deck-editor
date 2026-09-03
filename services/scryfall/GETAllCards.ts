@@ -9,6 +9,7 @@ interface SearchParams {
 
 export const searchCards = async (params: SearchParams) => {
     const { name, format, color, page} = params;
+    let url = ""
 
 
     const searchIndex = [
@@ -21,11 +22,18 @@ export const searchCards = async (params: SearchParams) => {
         .map(filter => filter.value)
         .filter(Boolean) // Remove empty strings
         .join(' ');
-        
-    //insert filterd content into url and use encodeURIComponent to encode character of the url
-    //get all cards that matches search query
-    var url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(queryString)}${page ? `&page=${page}` : ''}`;
 
+    if (queryString == ""){
+        console.log("ran without string")
+        //if queryString is empty get all paper cards
+        url= (`https://api.scryfall.com/cards/search?q=(game%3Apaper)${page ? `&page=${page}` : ''}`)
+    } else {
+        console.log("ran with string")
+        //insert filterd content into url and use encodeURIComponent to encode character of the url
+        url = (`https://api.scryfall.com/cards/search?q=${encodeURIComponent(queryString)}${page ? `&page=${page}` : ''}`)
+    }
+    
+    //get all cards that matches search query
     const res = await fetch(url);
 
     if (!res.ok) {

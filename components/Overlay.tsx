@@ -43,18 +43,20 @@ function overlay() {
   
   async function card(formData: FormData) {
     const categoryIndex = Number(formData.get("selectcategory") as string)
+    const count = Number(formData.get("cards"))
     const [set, collectorNumber] = (formData.get("selectPrinting") as string).split("/")
-    addCard(1, categoryIndex, set, collectorNumber)
+    addCard(count, categoryIndex, set, collectorNumber)
     shutdown()
   }
 
   async function update(formData: FormData,) {
     const [selectedset, selectedsetcollectorNumber] = (formData.get("selectPrinting") as string).split("/")
     const selectedcategory = Number(formData.get("selectcategory") as string)
+    const count = Number(formData.get("cards"))
     const orginalcategory = extra.index!;
     const set = extra.set!
     const collectorNumber = extra.collector_number!
-    updateCard(1, selectedcategory, orginalcategory, set, selectedset, collectorNumber, selectedsetcollectorNumber)
+    updateCard(count, selectedcategory, orginalcategory, set, selectedset, collectorNumber, selectedsetcollectorNumber)
     shutdown()
   }
 
@@ -68,6 +70,15 @@ function overlay() {
     shutdown()
     importDecks()
   }
+
+  // Functions for generating content in the overlay
+  function createFormatOptions(){
+    const formats = ["standard", "pioneer", "modern", "legacy", "vintage", "commander", "oathbreaker", "pauper"]
+    return formats.map((format:string)=> (
+      <option key={format} value={format}>{String(format).charAt(0).toUpperCase() + String(format).slice(1)}</option>
+    ))
+  }
+
   function createCategoryOptions() {
     return deckinfo.deck.map((category:category, index) => (
         <option key={index} value={index}>{category.categoryName}</option>
@@ -97,6 +108,7 @@ function overlay() {
   
 }, [setting, value, extra])
 
+  //Logic for 
   if (!setting) {
     return null
   } else {
@@ -117,14 +129,7 @@ function overlay() {
               <form action={formAction}>
               <input type="text" id="name" name="name" required/>
               <select name="format" id="format" required>
-                <option value="standard">Standard</option>
-                <option value="pioneer">Pioneer</option>
-                <option value="modern">Modern</option>
-                <option value="legacy">Legacy</option>
-                <option value="vintage">Vintage</option>
-                <option value="commander">Commander</option>
-                <option value="oathbreaker">Oathbreaker</option>
-                <option value="pauper">Pauper</option>
+                {createFormatOptions()}
               </select>
               <button type='submit'>
                 Create New Deck
@@ -145,13 +150,15 @@ function overlay() {
         return <div className='overlay-display'>
           <h2>Add Card</h2>
           <form action={card}>
+            <label htmlFor="cards">select number of copies you want to add to the deck</label>
+            <input type="number" id="cards" name="cards" min="1" defaultValue="1"/>
             <select name="selectcategory" id="selectcategory" required>
                 {createCategoryOptions()}
             </select>
             <select name="selectPrinting" id="selectPrinting" required>
               {createPrintingOptions()}
             </select>
-            <button type='submit'>Create</button>
+            <button type='submit'>Add</button>
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>
         </div>
@@ -159,13 +166,15 @@ function overlay() {
         return <div className='overlay-display'>
           <h2>Add Card</h2>
           <form action={update}>
+            <label htmlFor="cards">Amount of copies</label>
+            <input type="number" id="cards" name="cards" min="1" defaultValue={extra.count}/>
             <select name="selectcategory" id="selectcategory" value={selectedcategory} onChange={(e) => setselectedcategory(Number(e.target.value))} required>
               {createCategoryOptions()}
             </select>
             <select name="selectPrinting" id="selectPrinting" value={selectedCard} onChange={(e) => setselectedCard(e.target.value)} required>
               {createPrintingOptions()}
             </select>
-            <button type='submit'>Create</button>
+            <button type='submit'>Update</button>
             <button onClick={()=>shutdown()}>Cancel</button>
           </form>
         </div>

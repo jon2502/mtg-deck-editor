@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 import { useOverlayContext } from '@/context/overlay_context';
+import { useDeckContext } from '@/context/deck_context';
 import CardImage from "@/components/cardImage"
 
 
@@ -31,10 +32,11 @@ type  MultiFaceCard = {
 
 const AllCards = () => {
   const {toggleOverlaySettings} = useOverlayContext()
+  const {deckinfo} = useDeckContext()
 
   //search parameters
   const [name, setName] = useState('')
-  const [format, setFormat] = useState('commander')
+  const [format, setFormat] = useState('')
   const [color, setColor] = useState('')
 
   //pages and button info
@@ -68,7 +70,6 @@ const AllCards = () => {
   }
 
   async function fetchCards() {
-    setPage(1)
     const res = await searchCards({ name, format, color, page })
     setCards(res.data)
     var val = Math.ceil(res.total_cards/ 175)
@@ -87,6 +88,7 @@ const AllCards = () => {
 
   useEffect(()=>{
      fetchCards()
+     setPage(0)
   },[name, format, color])
 
   useEffect(()=>{
@@ -96,6 +98,10 @@ const AllCards = () => {
  useEffect(()=>{
     fetchNewPage()
   },[page])
+
+  useEffect(()=>{
+    setFormat(deckinfo.format)
+  },[deckinfo.format])
 
   return(
   <>
