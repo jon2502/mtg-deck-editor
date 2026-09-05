@@ -24,11 +24,9 @@ export const searchCards = async (params: SearchParams) => {
         .join(' ');
 
     if (queryString == ""){
-        console.log("ran without string")
         //if queryString is empty get all paper cards
         url= (`https://api.scryfall.com/cards/search?q=(game%3Apaper)${page ? `&page=${page}` : ''}`)
     } else {
-        console.log("ran with string")
         //insert filterd content into url and use encodeURIComponent to encode character of the url
         url = (`https://api.scryfall.com/cards/search?q=${encodeURIComponent(queryString)}${page ? `&page=${page}` : ''}`)
     }

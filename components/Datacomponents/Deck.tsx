@@ -6,13 +6,11 @@ import { useDeckContext } from "@/context/deck_context"
 import {category} from "@/global"
 import CardImage from "@/components/cardImage"
 
-interface DeckProps {
-  id: string;
-}
 
-const Deck = ({id}:DeckProps) => {
+
+const Deck = () => {
     const {toggleOverlaySettings} = useOverlayContext()
-    const {deckinfo, importDeck, deleteCategory} = useDeckContext()
+    const {deckinfo, deleteCategory} = useDeckContext()
     const router = useRouter()
 
     async function save() {
@@ -43,10 +41,6 @@ const Deck = ({id}:DeckProps) => {
                     ))}
                 </div>
     }
-
-    useEffect(() =>{
-        importDeck(id)        
-    },[])
 
     return (
     <>

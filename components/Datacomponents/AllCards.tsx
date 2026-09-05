@@ -36,11 +36,11 @@ const AllCards = () => {
 
   //search parameters
   const [name, setName] = useState('')
-  const [format, setFormat] = useState('')
+  const [format, setFormat] = useState(deckinfo.format)
   const [color, setColor] = useState('')
 
   //pages and button info
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const [totalpages, setTotalpages] = useState(0)
   const [btnamount, setBtnamount] = useState(0)
   const [btnarray, setBtnarray] = useState<number[]>([])
@@ -64,12 +64,13 @@ const AllCards = () => {
     var from = end - btnamount
     var values :number[] = []
     for (var i = from; i < end; i++) {
-      values.push(i);
+      values.push(i+1);
     }
     setBtnarray(values) 
   }
 
   async function fetchCards() {
+    if (deckinfo.isloading == true) return
     const res = await searchCards({ name, format, color, page })
     setCards(res.data)
     var val = Math.ceil(res.total_cards/ 175)
@@ -82,42 +83,42 @@ const AllCards = () => {
   }
 
   async function fetchNewPage() {
+    if (deckinfo.isloading == true) return
     const res = await searchCards({ name, format, color, page })
     setCards(res.data)
   }
 
   useEffect(()=>{
      fetchCards()
-     setPage(0)
+     setPage(1)
   },[name, format, color])
+
+ useEffect(()=>{
+    if (deckinfo.isloading == true) return
+    fetchNewPage()
+  },[page])
 
   useEffect(()=>{
     generateBtns()
   },[page, btnamount])
 
- useEffect(()=>{
-    fetchNewPage()
-  },[page])
-
-  useEffect(()=>{
-    setFormat(deckinfo.format)
-  },[deckinfo.format])
-
   return(
   <>
-    <div>
-      <button onClick={() => setPage(1)}>{"<<"}</button>
-      <button onClick={() => setPage(page - 1)}>{"<"}</button>
-      {btnarray.map((num)=>(
-        <button key={num}
-        className={num+1 === page ? 'active NavBtn' : 'NavBtn'}
-        id={(num + 1).toString()}
-        onClick={() => setPage(num + 1)}>
-          {num+1}</button>
-      ))}
-      <button onClick={() => setPage(page + 1)}>{">"}</button>
-      <button onClick={() => setPage(totalpages)}>{">>"}</button>
-    </div>
+    {btnamount > 0 &&
+      <div className='mb-3'>
+        <button className="navBtn bg-blue-900 mr-1" onClick={() => setPage(1)}>{"<<"}</button>
+        <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page - 1)}>{"<"}</button>
+        {btnarray.map((num)=>(
+          <button key={num}
+          className={`navBtn mx-1 ${num == page ? 'bg-amber-900' : 'bg-blue-900'}`}
+          id={(num).toString()}
+          onClick={() => setPage(num)}>
+            {num}</button>
+        ))}
+        <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page + 1)}>{">"}</button>
+        <button className="navBtn bg-blue-900 ml-1" onClick={() => setPage(totalpages)}>{">>"}</button>
+      </div>
+    }
     <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
           {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(

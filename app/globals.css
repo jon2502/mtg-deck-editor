@@ -20,6 +20,10 @@ h5 {
   font-size: 1.2tarem;
 }
 
+button {
+  cursor: pointer;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ededed;
@@ -35,4 +39,8 @@ body {
 
 @utility overlay-display {
   @apply fixed bg-black/25 w-screen h-screen top-[0%] flex flex-col items-center content-center
+}
+
+@utility navBtn {
+   @apply rounded-sm w-6 h-auto
 }

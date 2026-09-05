@@ -9,6 +9,7 @@ interface DeckContextType {
     deckinfo: Deckinfo;
     importDecks: () => void;
     importDeck: (id:string) => void;
+    resetDeck: () => void;
     addCategory:(categoryName: string, parentId: string) => void;
     deleteCategory: (index:number) => void;
     addCard: (count:number, categoryIndex:number, set:string, collectorNumber:string) => void;
@@ -31,12 +32,12 @@ const deafultDeckContextType: DeckContextType = {
         format: "",
         color: "",
         _id: "",
-        deck: [
-            {categoryName:"", cards:[], type: "main",}
-        ]
+        deck: [],
+        isloading: true
     },
     importDecks:() => {},
     importDeck:() => {},
+    resetDeck:() => {},
     addCategory:() => {},
     deleteCategory:() => {},
     addCard:() => {},
@@ -123,6 +124,11 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         // set the deck state once with all the additional data
         setDeckinfo({...deck, deck:deckExtraInfo})
     }
+
+    async function resetDeck() {
+        setDeckinfo(deafultDeckContextType.deckinfo)
+    }
+
 
     // Add new sub category to a main category
     async function addCategory(newcategoryName: string, parentId: string) {
@@ -250,7 +256,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
     }
 
     return (
-        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, addCategory, deleteCategory, addCard, updateCard, removeCard}}>
+        <DeckContext.Provider value={{deckinfo, decklist, importDecks, importDeck, resetDeck, addCategory, deleteCategory, addCard, updateCard, removeCard}}>
             {children}
         </DeckContext.Provider>
     )

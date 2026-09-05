@@ -5,6 +5,7 @@ export interface Deckinfo {
     color: string;
     _id: string;
     deck: Array<category>;
+    isloading?: boolean 
 }
 
 export interface category {
