@@ -42,7 +42,7 @@ const AllCards = () => {
   //pages and button info
   const [page, setPage] = useState(1)
   const [totalpages, setTotalpages] = useState(0)
-  const [btnamount, setBtnamount] = useState(0)
+  const [btnamount, setBtnamount] = useState(10)
   const [btnarray, setBtnarray] = useState<number[]>([])
   //list of cards
   const [cards, setCards] = useState([])
@@ -89,18 +89,18 @@ const AllCards = () => {
   }
 
   useEffect(()=>{
-     fetchCards()
-     setPage(1)
+    fetchCards()
+    setPage(1)
+    
   },[name, format, color])
 
  useEffect(()=>{
-    if (deckinfo.isloading == true) return
     fetchNewPage()
   },[page])
 
   useEffect(()=>{
     generateBtns()
-  },[page, btnamount])
+  },[page, totalpages, btnamount])
 
   return(
   <>

@@ -4,29 +4,40 @@ import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from '@/context/deck_context'
 import { useParams } from 'next/navigation'
 import Deck from '@/components/Datacomponents/Deck'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from "next/navigation";
 
 
 const page =  () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {deckinfo, importDeck, resetDeck} = useDeckContext()
-  const [loaded, setLoaded]= useState(false)
+  const [saved, setSaved]= useState(false)
 
   const params = useParams<{ id: string }>()
-
+  const pathname = usePathname()
+  const previousPathname = useRef(pathname)
+  
   useEffect(() =>{
     importDeck(params.id)
   },[])
 
   useEffect(() =>{
-    resetDeck()
-  }, [usePathname])
-
-  function checkSavedStatus(saved:boolean) {
-    if(!saved){
-      toggleOverlaySettings("save")
+    return () => {
+      resetDeck()
     }
+  }, [])
+
+  /*
+  if(!saved){
+        console.log("not saved")
+        toggleOverlaySettings("save")
+        return
+      }
+      console.log("reseting deck")
+  */
+ 
+  function checkSavedStatus(saved:boolean) {
+
   }
 
   return (

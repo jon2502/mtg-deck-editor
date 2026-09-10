@@ -8,9 +8,9 @@ const page = () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {decklist, importDecks}= useDeckContext()
 
-    useEffect(() =>{
-      importDecks()
-    },[])
+  useEffect(() =>{
+    importDecks()
+  },[])
     
   return (
     <section>
