@@ -132,8 +132,8 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
 
     // Add new sub category to a main category
     async function addCategory(newcategoryName: string, parentId: string) {
-        const calIndex = deckinfo.deck.findIndex(
-            category => category.categoryName === parentId
+        const calIndex = deckinfo.deck.findLastIndex(
+            category => category.categoryName === parentId || category.parentId == parentId
         ) + 1
 
         const newcategory = {

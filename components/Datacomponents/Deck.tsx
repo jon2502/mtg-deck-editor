@@ -13,15 +13,6 @@ const Deck = () => {
     const {deckinfo, deleteCategory} = useDeckContext()
     const router = useRouter()
 
-    async function save() {
-         fetch("http://localhost:3500/Save",{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(deckinfo)
-    })
-    }
 
     function createCards(category:category, categoryindex:number){
         return  <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
@@ -44,10 +35,6 @@ const Deck = () => {
 
     return (
     <>
-    <div>
-        <h1>{deckinfo?.name}</h1>
-    </div>
-    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
         <div>
             {deckinfo.deck.map((category: category, index:number)=>(
                 <div key={`${category.type == "custom" && category.parentId+"/"}${category.categoryName}`} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
@@ -78,8 +65,6 @@ const Deck = () => {
                 </div>
             ))}
         </div>
-    </section>
-    <button onClick={save}>Save</button>
     </>
     )
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { searchCards } from '@/services/scryfall/GETAllCards'
 import { useOverlayContext } from '@/context/overlay_context';
 import { useDeckContext } from '@/context/deck_context';
@@ -30,20 +30,20 @@ type  MultiFaceCard = {
   }[];
 };
 
-const AllCards = () => {
+type props = {
+  page:number
+  name: string
+  format: string
+  color: string
+  setPage: React.Dispatch<React.SetStateAction<number>>
+  setTotalpages: React.Dispatch<React.SetStateAction<number>>
+  setBtnamount: React.Dispatch<React.SetStateAction<number>>
+}
+
+const AllCards = ({page, name, format, color, setPage, setTotalpages, setBtnamount}:props) => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {deckinfo} = useDeckContext()
 
-  //search parameters
-  const [name, setName] = useState('')
-  const [format, setFormat] = useState(deckinfo.format)
-  const [color, setColor] = useState('')
-
-  //pages and button info
-  const [page, setPage] = useState(1)
-  const [totalpages, setTotalpages] = useState(0)
-  const [btnamount, setBtnamount] = useState(10)
-  const [btnarray, setBtnarray] = useState<number[]>([])
   //list of cards
   const [cards, setCards] = useState([])
 
@@ -52,22 +52,15 @@ const AllCards = () => {
     y: 0
   })
 
-  function generateBtns(){
-    var half = Math.round(btnamount / 2)
-    if(page + half >= totalpages){
-      var end = totalpages
-    } else if (page > half) {
-      var end = page + half
-    } else {
-      var end = btnamount
-    }
-    var from = end - btnamount
-    var values :number[] = []
-    for (var i = from; i < end; i++) {
-      values.push(i+1);
-    }
-    setBtnarray(values) 
-  }
+  useEffect(()=>{
+    fetchCards()
+    setPage(1)
+  },[name, format, color])
+
+  useEffect(()=>{
+    fetchNewPage()
+  },[page])
+
 
   async function fetchCards() {
     if (deckinfo.isloading == true) return
@@ -98,58 +91,37 @@ const AllCards = () => {
     fetchNewPage()
   },[page])
 
-  useEffect(()=>{
-    generateBtns()
-  },[page, totalpages, btnamount])
-
   return(
   <>
-    {btnamount > 0 &&
-      <div className='mb-3'>
-        <button className="navBtn bg-blue-900 mr-1" onClick={() => setPage(1)}>{"<<"}</button>
-        <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page - 1)}>{"<"}</button>
-        {btnarray.map((num)=>(
-          <button key={num}
-          className={`navBtn mx-1 ${num == page ? 'bg-amber-900' : 'bg-blue-900'}`}
-          id={(num).toString()}
-          onClick={() => setPage(num)}>
-            {num}</button>
-        ))}
-        <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page + 1)}>{">"}</button>
-        <button className="navBtn bg-blue-900 ml-1" onClick={() => setPage(totalpages)}>{">>"}</button>
-      </div>
-    }
-    <section className='h-[75vh] overflow-auto overflow-x-hidden pr-3'>
-        <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-          {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
-          <div key={card.oracle_id}>
-            <CardImage art={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal} alttext={card.oracle_id}/>
-            <div>
-              <p>{card.name}</p>
-              {card.card_faces ? (
-                <div>
-                  <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
-                  {card.card_faces.some(face=>face.mana_cost) && (
-                  <p>{card.card_faces
-                    .map(face => face.mana_cost)
-                    .filter(cost => cost != "")
-                    .join("//")}
-                  </p>
-                  )}
-                </div>
-              ):(
-                <div>
-                  <p>{card.type_line}</p>
-                  {card.mana_cost && (<p>{card.mana_cost}</p>)}
-                </div>
-                
-              )}
-              <button onClick={() => toggleOverlaySettings("add-card",{oracleid:card.oracle_id})}>+</button>
-            </div>
+    <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
+      {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
+        <div key={card.oracle_id}>
+          <CardImage art={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal} alttext={card.oracle_id}/>
+          <div>
+            <p>{card.name}</p>
+            {card.card_faces ? (
+              <div>
+                <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
+                {card.card_faces.some(face=>face.mana_cost) && (
+                <p>{card.card_faces
+                  .map(face => face.mana_cost)
+                  .filter(cost => cost != "")
+                  .join("//")}
+                </p>
+                )}
+              </div>
+            ):(
+              <div>
+                <p>{card.type_line}</p>
+                {card.mana_cost && (<p>{card.mana_cost}</p>)}
+              </div>
+              
+            )}
+            <button onClick={() => toggleOverlaySettings("add-card",{oracleid:card.oracle_id})}>+</button>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      ))}
+    </div>
   </>
   )
 }
