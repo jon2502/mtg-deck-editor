@@ -20,29 +20,61 @@ const page =  () => {
   const [btnarray, setBtnarray] = useState<number[]>([])
 
   const [name, setName] = useState('')
-  const [format, setFormat] = useState(deckinfo.format)
+  const [format, setFormat] = useState('')
   const [color, setColor] = useState('')
   
+  const [cards, setCards] = useState([])
 
   const [saved, setSaved]= useState(false)
 
-  const params = useParams<{ id: string }>()
-  const pathname = usePathname()
-  const previousPathname = useRef(pathname)
+  const params = useParams<{ id: string, format: string }>()
   
   useEffect(() =>{
     importDeck(params.id)
   },[])
 
   useEffect(()=>{
+    setFormat(deckinfo.format)
+  },[deckinfo])
+
+  useEffect(()=>{
+    if(deckinfo.isloading==true){return}
     generateBtns()
   },[page, totalpages, btnamount])
+
+  useEffect(()=>{
+    if(deckinfo.isloading==true){return}
+    fetchCards()
+    setPage(1)
+  },[name, format, color])
+
+  useEffect(()=>{
+    if(deckinfo.isloading==true){return}
+    fetchNewPage()
+  },[page])
 
   useEffect(() =>{
     return () => {
       resetDeck()
     }
-  }, [])
+  },[])
+
+  async function fetchCards() {
+    const res = await searchCards({ name, format, color, page })
+    setCards(res.data)
+    var val = Math.ceil(res.total_cards/ 175)
+    setTotalpages(val)
+    if(val < 10){
+      setBtnamount(val)
+    }else{
+      setBtnamount(10)
+    }
+  }
+
+  async function fetchNewPage() {
+    const res = await searchCards({ name, format, color, page })
+    setCards(res.data)
+  }
 
     function generateBtns(){
     var half = Math.round(btnamount / 2)
@@ -72,16 +104,13 @@ const page =  () => {
   }
   /*
   if(!saved){
-        console.log("not saved")
         toggleOverlaySettings("save")
         return
       }
-      console.log("reseting deck")
   function checkSavedStatus(saved:boolean) {
 
   }
   */
-  
   return (
     <section>
       <section className='flex justify-center items-center gap-[2.5%]'>
@@ -109,7 +138,7 @@ const page =  () => {
       <section className='flex justify-center items-center gap-[2.5%]'>
         <div className='w-[45%] h-[75vh] overflow-auto overflow-x-hidden pr-3'>
           {!deckinfo.isloading &&
-            <AllCards page={page} name={name} format={format} color={color} setPage={setPage} setTotalpages={setTotalpages} setBtnamount={setBtnamount}/>
+            <AllCards cards={cards}/>
           }
         </div>
         <div className='w-[45%] h-[75vh] overflow-auto overflow-x-hidden pr-3'>

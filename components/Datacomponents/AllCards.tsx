@@ -30,66 +30,18 @@ type  MultiFaceCard = {
   }[];
 };
 
-type props = {
-  page:number
-  name: string
-  format: string
-  color: string
-  setPage: React.Dispatch<React.SetStateAction<number>>
-  setTotalpages: React.Dispatch<React.SetStateAction<number>>
-  setBtnamount: React.Dispatch<React.SetStateAction<number>>
-}
+type Card = {
+  oracle_id:string;
+  name:string;
+} & (SingleFaceCard | MultiFaceCard)
 
-const AllCards = ({page, name, format, color, setPage, setTotalpages, setBtnamount}:props) => {
+const AllCards = ({cards}: {cards:Card[]}) => {
   const {toggleOverlaySettings} = useOverlayContext()
-  const {deckinfo} = useDeckContext()
-
-  //list of cards
-  const [cards, setCards] = useState([])
 
   const [position, setPosition] = useState({
     x: 0,
     y: 0
   })
-
-  useEffect(()=>{
-    fetchCards()
-    setPage(1)
-  },[name, format, color])
-
-  useEffect(()=>{
-    fetchNewPage()
-  },[page])
-
-
-  async function fetchCards() {
-    if (deckinfo.isloading == true) return
-    const res = await searchCards({ name, format, color, page })
-    setCards(res.data)
-    var val = Math.ceil(res.total_cards/ 175)
-    setTotalpages(val)
-    if(val < 10){
-      setBtnamount(val)
-    }else{
-      setBtnamount(10)
-    }
-  }
-
-  async function fetchNewPage() {
-    if (deckinfo.isloading == true) return
-    const res = await searchCards({ name, format, color, page })
-    setCards(res.data)
-  }
-
-  useEffect(()=>{
-    fetchCards()
-    setPage(1)
-    
-  },[name, format, color])
-
- useEffect(()=>{
-    fetchNewPage()
-  },[page])
 
   return(
   <>

@@ -123,6 +123,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         )
         // set the deck state once with all the additional data
         setDeckinfo({...deck, deck:deckExtraInfo})
+        return deck.format
     }
 
     async function resetDeck() {

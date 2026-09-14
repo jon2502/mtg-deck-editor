@@ -11,13 +11,12 @@ export const searchCards = async (params: SearchParams) => {
     const { name, format, color, page} = params;
     let url = ""
 
-
     const searchIndex = [
         {value: name ? `name:${name}` : '' },
         {value: format ? `f:${format}` : '' },
         {value: color && format == "commander" ? `commander:${color}` : color ? `color:${color}` : ''}
     ]
-
+    
     const queryString = searchIndex
         .map(filter => filter.value)
         .filter(Boolean) // Remove empty strings
@@ -37,6 +36,5 @@ export const searchCards = async (params: SearchParams) => {
     if (!res.ok) {
         throw new Error(`Scryfall search failed: ${res.status}`);
     }
-    
     return res.json();
 }
