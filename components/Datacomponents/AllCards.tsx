@@ -45,35 +45,41 @@ const AllCards = ({cards}: {cards:Card[]}) => {
 
   return(
   <>
-    <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
-      {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
-        <div key={card.oracle_id}>
-          <CardImage art={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal} alttext={card.oracle_id}/>
-          <div>
-            <p>{card.name}</p>
-            {card.card_faces ? (
-              <div>
-                <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
-                {card.card_faces.some(face=>face.mana_cost) && (
-                <p>{card.card_faces
-                  .map(face => face.mana_cost)
-                  .filter(cost => cost != "")
-                  .join("//")}
-                </p>
-                )}
-              </div>
-            ):(
-              <div>
-                <p>{card.type_line}</p>
-                {card.mana_cost && (<p>{card.mana_cost}</p>)}
-              </div>
-              
-            )}
-            <button onClick={() => toggleOverlaySettings("add-card",{oracleid:card.oracle_id})}>+</button>
-          </div>
+      {cards.length == 0 ? (
+        <div className='mt-6 flex flex-col justify-center text-center'>
+          <h2>No cards found</h2>
+          <h4>Your search didn’t match any cards. Try Adjusting your search parameters.</h4>
         </div>
-      ))}
-    </div>
+      ):
+      <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5'>
+        {cards.map((card:{oracle_id:string, name:string} & (SingleFaceCard | MultiFaceCard))=>(
+          <div key={card.oracle_id}>
+            <CardImage art={card.image_uris?.normal ?? card.card_faces?.[0]?.image_uris?.normal} alttext={card.oracle_id}/>
+            <div>
+              <p>{card.name}</p>
+              {card.card_faces ? (
+                <div>
+                  <p>{card.card_faces[0].type_line}//{card.card_faces[1].type_line}</p>
+                  {card.card_faces.some(face=>face.mana_cost) && (
+                  <p>{card.card_faces
+                    .map(face => face.mana_cost)
+                    .filter(cost => cost != "")
+                    .join("//")}
+                  </p>
+                  )}
+                </div>
+              ):(
+                <div>
+                  <p>{card.type_line}</p>
+                  {card.mana_cost && (<p>{card.mana_cost}</p>)}
+                </div>
+                
+              )}
+              <button onClick={() => toggleOverlaySettings("add-card",{oracleid:card.oracle_id})}>+</button>
+            </div>
+          </div>))}
+        </div>
+      }
   </>
   )
 }

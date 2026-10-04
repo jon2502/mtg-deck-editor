@@ -32,8 +32,13 @@ export const searchCards = async (params: SearchParams) => {
     
     //get all cards that matches search query
     const res = await fetch(url);
+    if (res.status === 404) {
+        return {
+            data: [],
+        };
+    }
 
-    if (!res.ok) {
+    if (!res.ok) { 
         throw new Error(`Scryfall search failed: ${res.status}`);
     }
     return res.json();

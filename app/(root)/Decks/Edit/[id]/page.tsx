@@ -27,7 +27,8 @@ const page =  () => {
 
   const [saved, setSaved]= useState(false)
 
-  const params = useParams<{ id: string, format: string }>()
+  const params = useParams<{ id: string}>()
+  
   
   useEffect(() =>{
     importDeck(params.id)
@@ -102,7 +103,8 @@ const page =  () => {
       body: JSON.stringify(deckinfo)
     })
   }
-  /*
+
+  /* working in progess save checker
   if(!saved){
         toggleOverlaySettings("save")
         return
@@ -111,6 +113,7 @@ const page =  () => {
 
   }
   */
+
   return (
     <section>
       <section className='flex justify-center items-center gap-[2.5%]'>
@@ -130,6 +133,14 @@ const page =  () => {
               <button className="navBtn bg-blue-900 ml-1" onClick={() => setPage(totalpages)}>{">>"}</button>
             </div>
           }
+          <div className='my-2.5'>
+            <input
+                type="text"
+                placeholder="Search for cards by name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+          </div>
         </div>
         <div className='w-[45%] h-auto pr-3'>
           <h1>{deckinfo.name}</h1>
