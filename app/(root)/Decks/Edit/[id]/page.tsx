@@ -8,11 +8,11 @@ import { useState, useEffect, useRef } from 'react'
 import { usePathname } from "next/navigation";
 import { searchCards } from '@/services/scryfall/GETAllCards'
 
-
-
 const page =  () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {deckinfo, importDeck, resetDeck} = useDeckContext()
+
+  const [debounce, setDebonce] = useState("")
 
   const [page, setPage] = useState(1)
   const [totalpages, setTotalpages] = useState(0)
@@ -40,14 +40,26 @@ const page =  () => {
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
-    generateBtns()
-  },[page, totalpages, btnamount])
+    fetchCards()
+    setPage(1)
+  },[format, color])
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
-    fetchCards()
-    setPage(1)
-  },[name, format, color])
+    const handleName = setTimeout(() => {
+      setDebonce(name);
+      fetchCards()
+      setPage(1)
+    }, 300)
+    return () => {
+      clearTimeout(handleName)
+    }
+  },[name])
+
+  useEffect(()=>{
+    if(deckinfo.isloading==true){return}
+    generateBtns()
+  },[page, totalpages, btnamount])
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
@@ -104,6 +116,9 @@ const page =  () => {
     })
   }
 
+  async function HandleChange(text:string){
+    setName(text)
+  }
   /* working in progess save checker
   if(!saved){
         toggleOverlaySettings("save")
@@ -138,7 +153,7 @@ const page =  () => {
                 type="text"
                 placeholder="Search for cards by name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => HandleChange(e.target.value)}
             />
           </div>
         </div>
@@ -153,9 +168,7 @@ const page =  () => {
           }
         </div>
         <div className='w-[45%] h-[75vh] overflow-auto overflow-x-hidden pr-3'>
-          {!deckinfo.isloading &&
             <Deck/>
-          }
         </div>
       </section>
       <section>
