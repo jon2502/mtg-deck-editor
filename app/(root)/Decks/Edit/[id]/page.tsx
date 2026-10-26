@@ -1,18 +1,16 @@
 "use client"
+import Image from 'next/image'
 import AllCards from '@/components/Datacomponents/AllCards'
 import { useOverlayContext } from '@/context/overlay_context'
 import { useDeckContext } from '@/context/deck_context'
 import { useParams } from 'next/navigation'
 import Deck from '@/components/Datacomponents/Deck'
 import { useState, useEffect, useRef } from 'react'
-import { usePathname } from "next/navigation";
 import { searchCards } from '@/services/scryfall/GETAllCards'
 
 const page =  () => {
   const {toggleOverlaySettings} = useOverlayContext()
   const {deckinfo, importDeck, resetDeck} = useDeckContext()
-
-  const [debounce, setDebonce] = useState("")
 
   const [page, setPage] = useState(1)
   const [totalpages, setTotalpages] = useState(0)
@@ -42,15 +40,14 @@ const page =  () => {
     if(deckinfo.isloading==true){return}
     fetchCards()
     setPage(1)
-  },[format, color])
+  },[format])
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
     const handleName = setTimeout(() => {
-      setDebonce(name);
       fetchCards()
       setPage(1)
-    }, 300)
+    }, 500)
     return () => {
       clearTimeout(handleName)
     }
@@ -86,7 +83,6 @@ const page =  () => {
       setTotalpages(0)
       setBtnamount(0)
     }
-
     setCards(res.data)
   }
 
@@ -124,9 +120,27 @@ const page =  () => {
     })
   }
 
-  async function HandleChange(text:string){
-    setName(text)
+  async function UpdateColors(val:string){
+    var newcolor 
+    if(val == "C"){
+      setColor(val)
+    } else {
+
+      if(color.includes("C")){
+        newcolor = color.replace("C","")
+      }
+
+      if(color.includes(val)){
+        newcolor = color.replace(val,"")
+      }else{
+        newcolor = color+val
+      }
+        setColor(newcolor)
+        console.log(newcolor)
+    }
+    
   }
+
   /* working in progess save checker
   if(!saved){
         toggleOverlaySettings("save")
@@ -136,6 +150,22 @@ const page =  () => {
 
   }
   */
+
+  const Checkbox = ( art:string, name:string, val:string) => {
+    return  <>
+      <input type="checkbox" name={name} id={name} value={val}  onChange={(e) => UpdateColors(e.target.value)}/>
+      <label htmlFor={name} className='flex'>
+      <Image
+          src={art}
+          alt={val}
+          width={25}
+          height={25}
+          unoptimized
+      />
+      {name}
+      </label>
+    </>
+  }
 
   return (
     <section>
@@ -154,14 +184,24 @@ const page =  () => {
               <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page + 1)}>{">"}</button>
               <button className="navBtn bg-blue-900 ml-1" onClick={() => setPage(totalpages)}>{">>"}</button>
             </div>
-          <div className='my-2.5'>
-            <input
-                type="text"
-                placeholder="Search for cards by name"
-                value={name}
-                onChange={(e) => HandleChange(e.target.value)}
-            />
-          </div>
+            <div className='my-2.5'>
+              <input
+                  type="text"
+                  placeholder="Search for cards by name"
+                  value={name}
+                  onChange={(e) => 
+                    setName(e.target.value)
+                  }
+              />
+            </div>
+            <div id="colors" className='flex'>
+              {Checkbox('https://svgs.scryfall.io/card-symbols/W.svg', 'white', 'W')}
+              {Checkbox('https://svgs.scryfall.io/card-symbols/U.svg', 'blue', 'U')}
+              {Checkbox('https://svgs.scryfall.io/card-symbols/B.svg', 'black', 'B')}
+              {Checkbox('https://svgs.scryfall.io/card-symbols/R.svg', 'red','R')}
+              {Checkbox('https://svgs.scryfall.io/card-symbols/G.svg', 'green', 'G')}
+              {Checkbox('https://svgs.scryfall.io/card-symbols/C.svg', 'colorless', 'C')}
+            </div>
         </div>
         <div className='w-[45%] h-auto pr-3'>
           <h1>{deckinfo.name}</h1>
