@@ -6,32 +6,10 @@ import { useDeckContext } from "@/context/deck_context"
 import {category} from "@/global"
 import CardImage from "@/components/cardImage"
 
-
-
 const Deck = () => {
     const {toggleOverlaySettings} = useOverlayContext()
     const {deckinfo, deleteCategory} = useDeckContext()
     const router = useRouter()
-
-
-    function createCards(category:category, categoryindex:number){
-        return  <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
-                    {category.cards.map((card)=>(
-                        <div key={card.set+"/"+card.collector_number}>
-                            <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
-                            <p>{card.count}</p>
-                            <div>
-                                <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, count:card.count, index:categoryindex})}>
-                                    Update
-                                </button>
-                                <button onClick={()=>toggleOverlaySettings("remove-card", {set:card.set, collector_number:card.collector_number, index:categoryindex})}>
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-    }
 
     return (
     <>
@@ -61,7 +39,22 @@ const Deck = () => {
                                 </div>
                         </div>
                     }
-                    {createCards(category, index)}
+                    <div className='grid grid-cols-[repeat(auto-fill,minmax(148px,1fr))] gap-2.5 mb-2.5'>
+                        {category.cards.map((card)=>(
+                            <div key={card.set+"/"+card.collector_number}>
+                                <CardImage art={card.art} alttext={card.set+"/"+card.collector_number}/>
+                                <p>{card.count}</p>
+                                <div>
+                                    <button onClick={()=>toggleOverlaySettings("update-card", {oracleid:card.oracleid, set:card.set, collector_number:card.collector_number, count:card.count, index:index})}>
+                                        Update
+                                    </button>
+                                    <button onClick={()=>toggleOverlaySettings("remove-card", {set:card.set, collector_number:card.collector_number, index:index})}>
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ))}
         </div>

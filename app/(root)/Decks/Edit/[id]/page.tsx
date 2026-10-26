@@ -74,14 +74,20 @@ const page =  () => {
 
   async function fetchCards() {
     const res = await searchCards({ name, format, color, page })
-    setCards(res.data)
-    var val = Math.ceil(res.total_cards/ 175)
-    setTotalpages(val)
-    if(val < 10){
-      setBtnamount(val)
-    }else{
-      setBtnamount(10)
+    if(res.data.length > 0){
+      var val = Math.ceil(res.total_cards/ 175)
+      setTotalpages(val)
+      if(val < 10){
+        setBtnamount(val)
+      }else{
+        setBtnamount(10)
+      }
+    } else {
+      setTotalpages(0)
+      setBtnamount(0)
     }
+
+    setCards(res.data)
   }
 
   async function fetchNewPage() {
@@ -99,10 +105,12 @@ const page =  () => {
       var end = btnamount
     }
     var from = end - btnamount
+
     var values :number[] = []
     for (var i = from; i < end; i++) {
       values.push(i+1);
     }
+
     setBtnarray(values) 
   }
 
@@ -133,7 +141,6 @@ const page =  () => {
     <section>
       <section className='flex justify-center items-center gap-[2.5%]'>
         <div className='w-[45%] h-auto pr-3'>
-          {btnamount > 0 &&
             <div className='mb-3'>
               <button className="navBtn bg-blue-900 mr-1" onClick={() => setPage(1)}>{"<<"}</button>
               <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page - 1)}>{"<"}</button>
@@ -147,7 +154,6 @@ const page =  () => {
               <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page + 1)}>{">"}</button>
               <button className="navBtn bg-blue-900 ml-1" onClick={() => setPage(totalpages)}>{">>"}</button>
             </div>
-          }
           <div className='my-2.5'>
             <input
                 type="text"
