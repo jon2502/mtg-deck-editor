@@ -3,18 +3,19 @@ interface SearchParams {
   name?: string;
   format?: string; // e.g. 'standard', 'modern'
   color?: string;
+  colorSearchParams: string
   page?: number;
   totalpages?: number;
 }
 
 export const searchCards = async (params: SearchParams) => {
-    const { name, format, color, page} = params;
+    const { name, format, color, colorSearchParams, page} = params;
     let url = ""
 
     const searchIndex = [
         {value: name ? `name:${name}` : '' },
         {value: format ? `f:${format}` : '' },
-        {value: color && format == "commander" ? `commander:${color}` : color ? `color:${color}` : ''}
+        {value: color && format == "commander" ? `commander:${color}` : color ? `color${colorSearchParams}${color}` : ''}
     ]
     
     const queryString = searchIndex

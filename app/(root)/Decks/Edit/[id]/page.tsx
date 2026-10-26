@@ -20,6 +20,10 @@ const page =  () => {
   const [name, setName] = useState('')
   const [format, setFormat] = useState('')
   const [color, setColor] = useState('')
+  const [colorSearchParams, setColorSearchParams] = useState(':')
+
+  const [cardTypes, setCardTypes] = useState<string[]>([])
+
   
   const [cards, setCards] = useState([])
 
@@ -40,7 +44,7 @@ const page =  () => {
     if(deckinfo.isloading==true){return}
     fetchCards()
     setPage(1)
-  },[format])
+  },[format, color, colorSearchParams])
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
@@ -70,7 +74,7 @@ const page =  () => {
   },[])
 
   async function fetchCards() {
-    const res = await searchCards({ name, format, color, page })
+    const res = await searchCards({ name, format, color, colorSearchParams, page })
     if(res.data.length > 0){
       var val = Math.ceil(res.total_cards/ 175)
       setTotalpages(val)
@@ -87,7 +91,7 @@ const page =  () => {
   }
 
   async function fetchNewPage() {
-    const res = await searchCards({ name, format, color, page })
+    const res = await searchCards({ name, format, color, colorSearchParams, page })
     setCards(res.data)
   }
 
@@ -126,14 +130,12 @@ const page =  () => {
       setColor(val)
     } else {
 
-      if(color.includes("C")){
-        newcolor = color.replace("C","")
-      }
-
       if(color.includes(val)){
         newcolor = color.replace(val,"")
+        newcolor = newcolor.replace("C","")
       }else{
         newcolor = color+val
+        newcolor = newcolor.replace("C","")
       }
         setColor(newcolor)
         console.log(newcolor)
@@ -201,6 +203,11 @@ const page =  () => {
               {Checkbox('https://svgs.scryfall.io/card-symbols/R.svg', 'red','R')}
               {Checkbox('https://svgs.scryfall.io/card-symbols/G.svg', 'green', 'G')}
               {Checkbox('https://svgs.scryfall.io/card-symbols/C.svg', 'colorless', 'C')}
+              <select onChange={(e) => setColorSearchParams(e.target.value)}>
+                  <option value=":">Exactly these colors</option>
+                  <option value=">=">Including these colors</option>
+                  <option value="<=">At most these colors</option>
+              </select>
             </div>
         </div>
         <div className='w-[45%] h-auto pr-3'>
