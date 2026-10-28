@@ -15,8 +15,8 @@ const Deck = () => {
     <>
         <div>
             {deckinfo.deck.map((category: category, index:number)=>(
-                <div key={`${category.type == "custom" && category.parentId+"/"}${category.categoryName}`} className={`flex flex-col ${category.type == "custom" && 'ml-3.5'}`}>
-                    {category.type == "main" &&
+                <div key={`${category.parentId != null && category.parentId+"/"}${category.categoryName}`} className={`flex flex-col ${category.parentId != null&& 'ml-3.5'}`}>
+                    {category.parentId == null &&
                             <>
                             <h5>{category.categoryName}</h5>
                             {category.categoryName != "Commander"  && category.categoryName != "Commanders"  &&
@@ -24,7 +24,7 @@ const Deck = () => {
                             }
                         </>
                     }
-                    {category.type == "custom" &&
+                    {category.parentId != null &&
                         <div className='flex flex-row'>
                                 <h5>{category.categoryName}</h5>
                                 <div>

@@ -45,8 +45,6 @@ const deafultDeckContextType: DeckContextType = {
     removeCard:() => {}
 }
 
-
-
 export const DeckContext = createContext<DeckContextType>(deafultDeckContextType);
 
 export const Decksetting = ({children}: {children: React.ReactNode}) => {
@@ -164,13 +162,13 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         const categoryContent = deckinfo.deck[index].cards
         const categoryName = deckinfo.deck[index].categoryName
         const parent = deckinfo.deck[index].parentId
-        const parentContent = deckinfo.deck.find((category)=> category.categoryName === parent && category.type === "main")
+        const parentContent = deckinfo.deck.find((category)=> category.categoryName === parent && category.parentId == null)
 
         if(parentContent){
             setDeckinfo(
                 currentdeck => ({
                     ...currentdeck,
-                     deck: currentdeck.deck.filter((category)=> category.type === "main" || category.categoryName !== categoryName)
+                     deck: currentdeck.deck.filter((category)=> category.parentId == null || category.categoryName !== categoryName)
                 })
             )
             categoryContent.forEach(card => {
@@ -178,7 +176,7 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                     currentdeck => ({
                         ...currentdeck,
                         deck: currentdeck.deck.map((category, index)=>
-                            category.categoryName == parent && category.type == "main"
+                            category.categoryName == parent && category.parentId == null
                             //if true set up and object for the category with the cards inside
                             ? addfunction(category, card)
                             //else keep the cards of the category unchanged 
