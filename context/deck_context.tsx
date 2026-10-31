@@ -162,30 +162,27 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         const categoryContent = deckinfo.deck[index].cards
         const categoryName = deckinfo.deck[index].categoryName
         const parent = deckinfo.deck[index].parentId
+        //Find the parent category
         const parentContent = deckinfo.deck.find((category)=> category.categoryName === parent && category.parentId == null)
 
         if(parentContent){
+            // filter out the selected gategory
+            const FilterdDeck = deckinfo.deck.filter((category)=> category.parentId == null || category.categoryName !== categoryName)
+            
+            const UpdatedDeck = FilterdDeck.map(category => {
+                if (category.categoryName === parent && category.parentId == null) {
+                    return categoryContent.reduce((selectedcategory, card) => addfunction(selectedcategory,card),category)
+                }
+                return category
+            });
+            
             setDeckinfo(
                 currentdeck => ({
                     ...currentdeck,
-                     deck: currentdeck.deck.filter((category)=> category.parentId == null || category.categoryName !== categoryName)
+                     deck: UpdatedDeck
                 })
             )
-            categoryContent.forEach(card => {
-                setDeckinfo(
-                    currentdeck => ({
-                        ...currentdeck,
-                        deck: currentdeck.deck.map((category, index)=>
-                            category.categoryName == parent && category.parentId == null
-                            //if true set up and object for the category with the cards inside
-                            ? addfunction(category, card)
-                            //else keep the cards of the category unchanged 
-                            : category
-                        )
-                    })
-                )
-                addfunction(parentContent, card)
-            });
+
         }
     }
 

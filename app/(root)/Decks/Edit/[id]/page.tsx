@@ -168,7 +168,7 @@ const page =  () => {
       </label>
     </>
   }
-
+  console.log(deckinfo)
   return (
     <section>
       <section className='flex justify-center items-center gap-[2.5%]'>
