@@ -20,8 +20,7 @@ const page =  () => {
   const [name, setName] = useState('')
   const [format, setFormat] = useState('')
   const [color, setColor] = useState('')
-  const [colorSearchParams, setColorSearchParams] = useState(':')
-
+  const [colorSearchParams, setColorSearchParams] = useState('=')
   const [cardTypes, setCardTypes] = useState<string[]>([])
 
   
@@ -44,7 +43,14 @@ const page =  () => {
     if(deckinfo.isloading==true){return}
     fetchCards()
     setPage(1)
-  },[format, color, colorSearchParams])
+  },[format, color])
+
+  useEffect(()=>{
+    if(deckinfo.isloading==true){return}
+    if(color==""){return}
+    fetchCards()
+    setPage(1)
+  },[colorSearchParams])
 
   useEffect(()=>{
     if(deckinfo.isloading==true){return}
@@ -154,7 +160,7 @@ const page =  () => {
   */
 
   const Checkbox = ( art:string, name:string, val:string) => {
-    return  <>
+    return  <div className='flex gap-1'>
       <input type="checkbox" name={name} id={name} value={val}  onChange={(e) => UpdateColors(e.target.value)}/>
       <label htmlFor={name} className='flex'>
       <Image
@@ -166,13 +172,14 @@ const page =  () => {
       />
       {name}
       </label>
-    </>
+    </div>
   }
-  console.log(deckinfo)
+  console.log(color)
+  console.log(colorSearchParams)
   return (
     <section>
       <section className='flex justify-center items-center gap-[2.5%]'>
-        <div className='w-[45%] h-auto pr-3'>
+        <div className='w-[45%] h-auto pr-3 pb-2.5'>
             <div className='mb-3'>
               <button className="navBtn bg-blue-900 mr-1" onClick={() => setPage(1)}>{"<<"}</button>
               <button className="navBtn bg-blue-900 mx-1" onClick={() => setPage(page - 1)}>{"<"}</button>
@@ -196,7 +203,7 @@ const page =  () => {
                   }
               />
             </div>
-            <div id="colors" className='flex'>
+            <div id="colors" className='flex gap-2'>
               {Checkbox('https://svgs.scryfall.io/card-symbols/W.svg', 'white', 'W')}
               {Checkbox('https://svgs.scryfall.io/card-symbols/U.svg', 'blue', 'U')}
               {Checkbox('https://svgs.scryfall.io/card-symbols/B.svg', 'black', 'B')}
@@ -204,7 +211,7 @@ const page =  () => {
               {Checkbox('https://svgs.scryfall.io/card-symbols/G.svg', 'green', 'G')}
               {Checkbox('https://svgs.scryfall.io/card-symbols/C.svg', 'colorless', 'C')}
               <select onChange={(e) => setColorSearchParams(e.target.value)}>
-                  <option value=":">Exactly these colors</option>
+                  <option value="=">Exactly these colors</option>
                   <option value=">=">Including these colors</option>
                   <option value="<=">At most these colors</option>
               </select>

@@ -138,7 +138,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
         const newcategory = {
             categoryName: newcategoryName,
             cards: [],
-            type: "custom",
             parentId: parentId,
         }
 
@@ -182,7 +181,6 @@ export const Decksetting = ({children}: {children: React.ReactNode}) => {
                      deck: UpdatedDeck
                 })
             )
-
         }
     }
 

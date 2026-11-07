@@ -11,7 +11,6 @@ export interface Deckinfo {
 export interface category {
     categoryName: string;
     cards: Array<card>;
-    type: string;
     parentId?: string;
 }
 
