@@ -2,21 +2,12 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import Page from '../../app/(root)/Decks/Edit/[id]/page'
 
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  }),
-  useParams: () => ({ id: 'test-id' }),
-  usePathname: () => '/Decks/View/test-id',
-  useSearchParams: () => new URLSearchParams(),
-}))
+import {useParams} from 'next/navigation';
+jest.mock('next/navigation');
+(useParams as jest.Mock).mockReturnValue({ id: 'mockSlug' });
 
 describe('Page', () => {
-  it('renders a heading', () => {
+  it('renders page', () => {
     render(<Page />)
   })
 })
