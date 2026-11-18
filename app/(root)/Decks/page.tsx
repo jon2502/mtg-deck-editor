@@ -11,7 +11,7 @@ const page = () => {
   useEffect(() =>{
     importDecks()
   },[])
-    
+  
   return (
     <section>
       {decklist.map((deck: {name:string, format:string, color:string, _id:string}) =>(
